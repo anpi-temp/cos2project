@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>受信メッセージ一覧</h2>
+{% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>
+            <strong>件名:</strong> {{ message.subject }}<br>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>メッセージはありません。</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}管理画面{% endblock %}
+
+{% block content %}
+<h1>管理画面</h1>
+<nav>
+    <ul>
+        <li><a href="{% url 'user_list' %}">ユーザー一覧</a></li>
+        <li><a href="{% url 'user_create' %}">ユーザー登録</a></li>
+        <li><a href="{% url 'send_admin_message' %}">メッセージ送信</a></li>
+    </ul>
+</nav>
+{% endblock %}
