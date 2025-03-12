@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>ユーザー一覧</h1>
-  <ul>
-    {% for user in users %}
-      <li>
-        {{ user.username }} ({{ user.phone_number }})
-        <a href="{% url 'user_edit' pk=user.pk %}" class="btn btn-warning btn-sm">編集</a>
-        <a href="{% url 'user_delete' pk=user.pk %}" class="btn btn-danger btn-sm">削除</a>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <a href="{% url 'dashboard' %}" class="btn btn-secondary">管理画面に戻る</a>
+<h1>ユーザー一覧</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ユーザー名</th>
+            <th>電話番号</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.phone_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

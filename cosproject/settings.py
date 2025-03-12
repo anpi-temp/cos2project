@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     "django.middleware.common.CommonMiddleware",
@@ -165,3 +166,11 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'cosapp.CustomUser'
+
+LOGIN_URL = '/admin_login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = False
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
