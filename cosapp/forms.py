@@ -5,6 +5,10 @@ class CustomUserCreationForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'phone_number']
+        labels = {
+            'username': 'ユーザー名',
+            'phone_number': '電話番号',
+        }
         
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
