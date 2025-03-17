@@ -1,17 +1,14 @@
 from django.shortcuts import render, redirect
-
-# Create your views here.
-
-from django.views.generic import ListView, CreateView, TemplateView, DeleteView, UpdateView, FormView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView, FormView
 from django.views import View
 from django.urls import reverse_lazy
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.views import LoginView
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, AdminMessageForm, AdminMessage
-from .models import CustomAdmin
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, AdminMessageForm
+from .models import AdminMessage
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 CustomUser = get_user_model()
 
@@ -20,12 +17,8 @@ class AdminView(LoginRequiredMixin, View):
     template_name = 'cosapp/dashboard/dashboard.html'
 
     def get(self, request):
-        if not CustomAdmin.objects.exists():
-            return redirect('admin_setup')
-        
-        if not isinstance(request.user, CustomAdmin):
+        if not request.user.is_admin:  # 管理者フラグでチェック
             return redirect('admin_login')
-        
         return render(request, self.template_name)
 
 class UserListView(ListView):
@@ -34,7 +27,7 @@ class UserListView(ListView):
     context_object_name = 'users'
     
     def get_queryset(self):
-        return CustomUser.objects.filter(is_admin=False)
+        return CustomUser.objects.filter(is_admin=False)  # 管理者以外のユーザーを表示
 
 class UserCreateView(CreateView):
     model = CustomUser
@@ -50,7 +43,7 @@ class UserDeleteView(DeleteView):
 class UserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
-    template_name = 'cosapp/dashboard/user_update.html'
+    template_name = 'cosapp/dashboard/user_edit.html'
     success_url = reverse_lazy('user_list')
 
 class SendAdminMessageView(FormView):
@@ -58,59 +51,75 @@ class SendAdminMessageView(FormView):
     form_class = AdminMessageForm
     success_url = reverse_lazy('dashboard')
 
+    def form_valid(self, form):
+        message = form.save(commit=False)
+        message.sender = self.request.user  # 現在のユーザーを送信者として設定
+        message.save()
+        return super().form_valid(form)
+
 class UserMessageListView(ListView):
     model = AdminMessage
     template_name = 'cosapp/user/message_list.html'
     context_object_name = 'messages'
 
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        recipient = get_object_or_404(CustomUser, id=user_id)
+        return AdminMessage.objects.filter(recipient=recipient)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipient'] = get_object_or_404(CustomUser, id=self.kwargs.get('user_id'))
+        return context
+
 class DashboardView(LoginRequiredMixin, View):
     login_url = 'admin_login'
 
     def get(self, request):
+        if not request.user.is_admin:  # 管理者フラグでチェック
+            return redirect('admin_login')
         return render(request, 'cosapp/dashboard/dashboard.html')
 
 class AdminSetupView(View):
     def get(self, request):
-        if CustomAdmin.objects.exists():
+        if CustomUser.objects.filter(is_admin=True).exists():  # 管理者が存在する場合リダイレクト
             return redirect('admin_login')
         return render(request, 'cosapp/dashboard/admin_setup.html')
 
     def post(self, request):
-        if CustomAdmin.objects.exists():
+        if CustomUser.objects.filter(is_admin=True).exists():
             return redirect('admin_login')
         
         username = request.POST.get('username')
         password = request.POST.get('password')
-        admin = CustomAdmin.objects.create_admin(username=username, password=password)
+        user = CustomUser.objects.create_user(username=username, password=password)
+        user.is_admin = True  # 管理者フラグを設定
+        user.is_staff = True  # スタッフ権限を付与（管理画面アクセス可能）
+        user.save()
         
-        login(request, admin)
-        return render(request, 'cosapp/dashboard/dashboard.html')  # 直接ダッシュボードを表示
+        login(request, user)
+        return redirect('dashboard')
 
 class AdminLoginView(View):
     def get(self, request):
-        if not CustomAdmin.objects.exists():
+        if not CustomUser.objects.filter(is_admin=True).exists():  # 管理者がいない場合セットアップへリダイレクト
             return redirect('admin_setup')
-        if request.user.is_authenticated and isinstance(request.user, CustomAdmin):
+        if request.user.is_authenticated and request.user.is_admin:  # 認証済みかつ管理者の場合ダッシュボードへリダイレクト
             return redirect('dashboard')
         return render(request, 'cosapp/dashboard/admin_login.html')
     
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(f"Attempting login for user: {username}")  # デバッグ出力
         user = authenticate(request, username=username, password=password)
         
-        print(f"Authenticated user: {user}")  # デバッグ出力
-        print(f"User type: {type(user)}")  # デバッグ出力
-        
-        if user is not None and user.is_admin_user:  # CustomAdminの代わりにis_admin_userをチェック
+        if user is not None and user.is_admin:  # 管理者フラグでチェック
             login(request, user)
-            print("Login successful, redirecting to dashboard")  # デバッグ出力
-            return redirect('dashboard')
+            return redirect('/dashboard/')
         else:
-            print("Login failed")  # デバッグ出力
-            return render(request, 'cosapp/dashboard/admin_login.html', {'error': 'Invalid credentials'})
-            
+            messages.error(request, '無効な資格情報です。')
+            return render(request, 'cosapp/dashboard/admin_login.html')
+
 class CustomLoginView(LoginView):
     template_name = 'login.html'
 
@@ -118,3 +127,9 @@ class CustomLoginView(LoginView):
         if request.user.is_authenticated:
             return redirect('dashboard')
         return super().get(request, *args, **kwargs)
+    
+class CustomLogoutView(View):
+    def get(self, request):
+        logout(request)
+        messages.success(request, 'ログアウトしました。')
+        return redirect('admin_login')

@@ -1,5 +1,6 @@
-from django.contrib.auth.forms import forms
-from .models import CustomUser, AdminMessage, CustomAdmin
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from .models import CustomUser, AdminMessage
 
 class CustomUserCreationForm(forms.ModelForm):
     class Meta:
@@ -24,19 +25,19 @@ class AdminMessageForm(forms.ModelForm):
         model = AdminMessage
         fields = ['recipient', 'subject']
 
-class AdminRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['recipient'].queryset = CustomUser.objects.filter(is_admin=False)
 
+class AdminRegistrationForm(UserCreationForm):
     class Meta:
-        model = CustomAdmin
-        fields = ['username', 'password']
+        model = CustomUser
+        fields = ['username', 'password1', 'password2']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-
-        if password != confirm_password:
-            raise forms.ValidationError("Passwords do not match.")
-        return cleaned_data
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True
+        user.is_admin = True
+        if commit:
+            user.save()
+        return user
