@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView, FormView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView, FormView, TemplateView
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model, authenticate, login, logout
@@ -27,7 +27,7 @@ class UserListView(ListView):
     context_object_name = 'users'
     
     def get_queryset(self):
-        return CustomUser.objects.filter(is_admin=False)  # 管理者以外のユーザーを表示
+        return CustomUser.objects.filter(is_admin=False) 
 
 class UserCreateView(CreateView):
     model = CustomUser
@@ -45,6 +45,11 @@ class UserUpdateView(UpdateView):
     form_class = CustomUserUpdateForm
     template_name = 'cosapp/dashboard/user_edit.html'
     success_url = reverse_lazy('user_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['username'] = ''  # ユーザー名の初期値をクリア
+        return initial
 
 class SendAdminMessageView(FormView):
     template_name = 'cosapp/dashboard/send_message.html'
@@ -133,3 +138,11 @@ class CustomLogoutView(View):
         logout(request)
         messages.success(request, 'ログアウトしました。')
         return redirect('admin_login')
+    
+class SomeView(TemplateView):
+    template_name = "cosapp/dashboard/index.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["key"] = "value"
+        return context

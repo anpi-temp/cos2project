@@ -1,21 +1,44 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ユーザー一覧 - 安否確認システム{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/user_list.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>ユーザー一覧</h1>
-<table>
-    <thead>
-        <tr>
-            <th>ユーザー名</th>
-            <th>電話番号</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.phone_number }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="user-list">
+    <h2 class="content-title">ユーザー一覧</h2>
+    <div class="table-container">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ユーザー名</th>
+                    <th>電話番号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.phone_number }}</td>
+                    <td class="action-buttons">
+                        <a href="{% url 'user_edit' user.id %}" class="edit-button">編集</a>
+                        <a href="{% url 'user_delete' user.id %}" class="delete-button">削除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="back-link">
+            <a href="{% url 'dashboard' %}" class="dashboard-link">管理画面に戻る</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/user_list.js' %}"></script>
 {% endblock %}

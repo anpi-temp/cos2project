@@ -10,6 +10,13 @@ class CustomUserCreationForm(forms.ModelForm):
             'username': 'ユーザー名',
             'phone_number': '電話番号',
         }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_admin = False  # 明示的にis_adminをFalseに設定
+        if commit:
+            user.save()
+        return user
         
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
@@ -19,6 +26,11 @@ class CustomUserUpdateForm(forms.ModelForm):
             'username': 'ユーザー名',
             'phone_number': '電話番号',
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 管理者のユーザー名をデフォルト値から除外
+        if 'username' in self.fields:
+            self.fields['username'].initial = ''
 
 class AdminMessageForm(forms.ModelForm):
     class Meta:

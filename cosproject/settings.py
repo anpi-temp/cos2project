@@ -174,3 +174,13 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = False
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+STATIC_URL = '/static/'
+
+# 開発環境用の静的ファイルディレクトリ
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # プロジェクト直下の 'static' フォルダ
+]
+
+# 本番環境で静的ファイルを一箇所にまとめるための設定
+STATIC_ROOT = BASE_DIR / 'staticfiles'

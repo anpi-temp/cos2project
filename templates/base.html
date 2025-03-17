@@ -1,25 +1,52 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}デフォルトタイトル{% endblock %}</title>
-    <!-- CSSやその他のヘッダー要素をここに追加 -->
+    <title>{% block title %}安否確認システム{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
 </head>
+
 <body>
-    <header>
-        <!-- ヘッダーの内容 -->
-    </header>
+    <div class="container">
+        <header class="main-header">
+            <!-- Flexboxでロゴとコントロールを分ける -->
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
+                    <div class="logo-text">
+                        <span class="bcp-text">BCP</span>
+                        <h1 class="system-name">安否確認システム</h1>
+                    </div>
+                </div>
+                <!-- ログアウトボタンと追加のコントロール -->
+                <div class="header-controls">
+                    <form action="{% url 'admin_logout' %}" method="POST" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">ログアウト</button>
+                    </form>
+                    {% block header_controls %}{% endblock %}
+                </div>
+            </div>
+            {% block header %}{% endblock %}
+        </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
 
-    <footer>
-        <!-- フッターの内容 -->
-    </footer>
+        <footer class="main-footer">
+            {% block footer %}
+            <!-- デフォルトのフッター内容 -->
+            {% endblock %}
+        </footer>
+    </div>
 
-    <!-- JavaScriptなどをここに追加 -->
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

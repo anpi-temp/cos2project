@@ -1,14 +1,35 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}管理画面{% endblock %}
+{% block title %}ダッシュボード - 安否確認システム{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block header_controls %}
+<button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars menu-icon"></i>
+</button>
+{% endblock %}
 
 {% block content %}
-<h1>管理画面</h1>
-<nav>
-    <ul>
-        <li><a href="{% url 'user_list' %}">ユーザー一覧</a></li>
-        <li><a href="{% url 'user_create' %}">ユーザー登録</a></li>
-        <li><a href="{% url 'send_admin_message' %}">メッセージ送信</a></li>
-    </ul>
-</nav>
+<div class="dashboard">
+    <div class="tab-menu" id="tabMenu">
+        <div class="tabs">
+            <!-- URLパターンに基づいたリンク -->
+            <a href="{% url 'user_list' %}" class="tab-button {% if selectedTab == 'userList' %}active{% endif %}" data-tab="userList">ユーザー一覧</a>
+            <a href="{% url 'user_create' %}" class="tab-button {% if selectedTab == 'userRegister' %}active{% endif %}" data-tab="userRegister">ユーザー登録</a>
+            <a href="{% url 'send_admin_message' %}" class="tab-button {% if selectedTab == 'sendMessage' %}active{% endif %}" data-tab="sendMessage">メッセージ送信</a>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <!-- コンテンツの表示（変更なし） -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
