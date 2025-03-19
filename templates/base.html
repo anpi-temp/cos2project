@@ -24,10 +24,9 @@
                 </div>
                 <!-- ログアウトボタンと追加のコントロール -->
                 <div class="header-controls">
-                    <form action="{% url 'admin_logout' %}" method="POST" class="logout-form">
-                        {% csrf_token %}
-                        <button type="submit" class="logout-button">ログアウト</button>
-                    </form>
+                    {% if user.is_authenticated and user.is_staff %}
+                        <a href="{% url 'admin_logout' %}" class="logout-button">ログアウト</a>
+                    {% endif %}
                     {% block header_controls %}{% endblock %}
                 </div>
             </div>

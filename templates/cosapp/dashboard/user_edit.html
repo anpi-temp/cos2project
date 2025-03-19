@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}ユーザー情報編集{% endblock %}
+
+{% block content %}
+<h1>ユーザー情報編集</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{% url 'user_list' %}" class="btn btn-secondary">キャンセル</a>
+</form>
+{% endblock %}

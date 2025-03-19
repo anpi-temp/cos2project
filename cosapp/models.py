@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from rest_framework import serializers
 
 class CustomUser(AbstractUser):
     """
@@ -37,6 +38,13 @@ class CustomUser(AbstractUser):
         user.is_staff = True  # 管理画面へのアクセス権を付与
         user.save()
         return user
+    
+class AdminMessageManager(models.Manager):
+    def unread(self):
+        return self.filter(is_read=False)
+
+    def read(self):
+        return self.filter(is_read=True)
 
 
 class AdminMessage(models.Model):
@@ -45,9 +53,11 @@ class AdminMessage(models.Model):
     """
     recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_admin_messages', verbose_name="受信者")
     subject = models.CharField(max_length=255, verbose_name="件名")
-    content = models.TextField(verbose_name="本文", default="メッセージ内容がありません")  # デフォルト値を設定
+    content = models.TextField(verbose_name="本文", default="")  # デフォルト値を設定
     created_at = models.DateTimeField(default=timezone.now, verbose_name="送信日時")
     is_read = models.BooleanField(default=False, verbose_name="既読状態")
+
+    objects = AdminMessageManager()
 
     class Meta:
         verbose_name = "管理者メッセージ"
@@ -56,3 +66,4 @@ class AdminMessage(models.Model):
 
     def __str__(self):
         return f"{self.subject} (To: {self.recipient.username})"
+    

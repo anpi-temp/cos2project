@@ -72,7 +72,7 @@ body {
     color: var(--white);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: none;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 

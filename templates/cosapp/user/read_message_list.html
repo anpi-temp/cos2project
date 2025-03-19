@@ -1,0 +1,46 @@
+{% extends 'user_base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/message_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="user-info">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span>ようこそ</span>
+                        <h1>{{ recipient.username }} さん</h1>
+                    </div>
+                </div>
+                <div class="message-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="message-list">
+                <h2>既読メッセージ一覧</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message-card read" data-message-id="{{ message.id }}">
+                            <div class="message-header">
+                                <h3>{{ message.subject }}</h3>
+                                <span>{{ message.created_at|date:"Y-m-d" }}</span>
+                            </div>
+                            <p>{{ message.content }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>既読メッセージはありません。</p>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+{% endblock %}

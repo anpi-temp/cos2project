@@ -8,35 +8,36 @@
 {% endblock %}
 
 {% block content %}
-<div class="user-list">
-    <h2 class="content-title">ユーザー一覧</h2>
-    <div class="table-container">
-        <table class="user-table">
-            <thead>
-                <tr>
-                    <th>ユーザー名</th>
-                    <th>電話番号</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.phone_number }}</td>
-                    <td class="action-buttons">
-                        <a href="{% url 'user_edit' user.id %}" class="edit-button">編集</a>
-                        <a href="{% url 'user_delete' user.id %}" class="delete-button">削除</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="back-link">
-            <a href="{% url 'dashboard' %}" class="dashboard-link">管理画面に戻る</a>
+<div class="user-tree">
+    <!-- 管理人表示エリア -->
+    <div class="admin-node">
+      <div class="user-card admin">
+        <div class="user-info">
+          <span class="username">管理人: {{ admin_user.username }}</span>
+          <span class="phone">{{ admin_user.phone_number }}</span>
         </div>
+      </div>
     </div>
-</div>
+  
+    <!-- ユーザー一覧（2列グリッド） -->
+    <div class="user-grid">
+      {% for user in users %}
+      <a href="{% url 'user_edit' user.id %}" class="user-card">
+        <div class="user-info">
+          <span class="username">{{ user.username }}</span>
+          <span class="phone">{{ user.phone_number }}</span>
+        </div>
+        <div class="user-actions">
+          <button class="edit-btn">編集</button>
+          <button class="delete-btn">削除</button>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="back-to-dashboard">
+        <a href="{% url 'dashboard' %}" class="dashboard-btn">ダッシュボードに戻る</a>
+    </div>
+  </div>
 {% endblock %}
 
 {% block extra_js %}

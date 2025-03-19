@@ -9,6 +9,10 @@ from .models import AdminMessage
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .serializers import AdminMessageSerializer
 
 CustomUser = get_user_model()
 
@@ -27,7 +31,12 @@ class UserListView(ListView):
     context_object_name = 'users'
     
     def get_queryset(self):
-        return CustomUser.objects.filter(is_admin=False) 
+        return CustomUser.objects.filter(is_admin=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['admin_user'] = CustomUser.objects.filter(is_admin=True).first()
+        return context
 
 class UserCreateView(CreateView):
     model = CustomUser
@@ -46,11 +55,6 @@ class UserUpdateView(UpdateView):
     template_name = 'cosapp/dashboard/user_edit.html'
     success_url = reverse_lazy('user_list')
 
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['username'] = ''  # ユーザー名の初期値をクリア
-        return initial
-
 class SendAdminMessageView(FormView):
     template_name = 'cosapp/dashboard/send_message.html'
     form_class = AdminMessageForm
@@ -62,6 +66,7 @@ class SendAdminMessageView(FormView):
         message.save()
         return super().form_valid(form)
 
+
 class UserMessageListView(ListView):
     model = AdminMessage
     template_name = 'cosapp/user/message_list.html'
@@ -70,12 +75,43 @@ class UserMessageListView(ListView):
     def get_queryset(self):
         user_id = self.kwargs.get('user_id')
         recipient = get_object_or_404(CustomUser, id=user_id)
-        return AdminMessage.objects.filter(recipient=recipient)
+        return AdminMessage.objects.filter(recipient=recipient).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recipient'] = get_object_or_404(CustomUser, id=self.kwargs.get('user_id'))
+        recipient = get_object_or_404(CustomUser, id=self.kwargs.get('user_id'))
+        context['recipient'] = recipient
+        
+        # 未読メッセージ数 (is_read を使用)
+        context['unread_count'] = self.get_queryset().filter(is_read=False).count()
         return context
+
+class AdminMessageViewSet(viewsets.ModelViewSet):
+    serializer_class = AdminMessageSerializer
+
+    queryset = AdminMessage.objects.all()  # すべてのメッセージを取得
+
+    @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        try:
+            message = AdminMessage.objects.get(pk=pk)  # メッセージを取得
+            message.is_read = True
+            message.save()
+            return Response({'status': 'message marked as read'})
+        except AdminMessage.DoesNotExist:
+            return Response({'status': 'message not found'}, status=404)
+        
+class ReadMessageListView(View):
+    template_name = 'cosapp/user/read_message_list.html'
+
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, pk=user_id)  # user_id でユーザーを取得
+        messages = AdminMessage.objects.filter(recipient=user, is_read=True)
+        context = {
+            'recipient': user,
+            'messages': messages,
+        }
+        return render(request, self.template_name, context)
 
 class DashboardView(LoginRequiredMixin, View):
     login_url = 'admin_login'

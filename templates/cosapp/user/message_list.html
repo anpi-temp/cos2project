@@ -1,16 +1,56 @@
-{% extends 'base.html' %}
+{% extends 'user_base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/message_list.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>受信メッセージ一覧</h2>
-{% if messages %}
-    <ul>
-    {% for message in messages %}
-        <li>
-            <strong>件名:</strong> {{ message.subject }}<br>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>メッセージはありません。</p>
-{% endif %}
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="user-info">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span>ようこそ</span>
+                        <h1>{{ recipient.username }} さん</h1>
+                    </div>
+                </div>
+                <div class="message-icon">
+                    <i class="fas fa-envelope"></i>
+                    {% if unread_count > 0 %}
+                        <span class="unread-badge">{{ unread_count }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% csrf_token %}  <!-- CSRFトークンを追加 -->
+            <section class="message-list">
+                <h2>メッセージ一覧</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message-card {% if not message.is_read %}unread{% endif %}" data-message-id="{{ message.id }}">
+                            <div class="message-header">
+                                <h3>{{ message.subject }}</h3>
+                                <span>{{ message.created_at|date:"Y-m-d" }}</span>
+                            </div>
+                            <p>{{ message.content }}</p>
+                            <button class="mark-read-btn" data-message-id="{{ message.id }}" {% if message.is_read %}disabled{% endif %}>既読にする</button>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>メッセージはありません。</p>
+                {% endif %}
+            </section>
+            <a href="{% url 'read_message_list' user_id=recipient.id %}">既読メッセージ</a>
+        </main>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/message_list.js' %}"></script>
 {% endblock %}

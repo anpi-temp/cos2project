@@ -10,13 +10,6 @@ class CustomUserCreationForm(forms.ModelForm):
             'username': 'ユーザー名',
             'phone_number': '電話番号',
         }
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.is_admin = False  # 明示的にis_adminをFalseに設定
-        if commit:
-            user.save()
-        return user
         
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
@@ -26,20 +19,22 @@ class CustomUserUpdateForm(forms.ModelForm):
             'username': 'ユーザー名',
             'phone_number': '電話番号',
         }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # 管理者のユーザー名をデフォルト値から除外
-        if 'username' in self.fields:
-            self.fields['username'].initial = ''
 
 class AdminMessageForm(forms.ModelForm):
     class Meta:
         model = AdminMessage
-        fields = ['recipient', 'subject']
+        fields = ['recipient', 'subject', 'content']  # contentを追加
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['recipient'].queryset = CustomUser.objects.filter(is_admin=False)
+        
+        # contentフィールドのカスタマイズ（オプション）
+        self.fields['content'].widget = forms.Textarea(attrs={
+            'rows': 5,
+            'placeholder': 'メッセージ本文を入力してください'
+        })
+        self.fields['content'].label = "本文"
 
 class AdminRegistrationForm(UserCreationForm):
     class Meta:

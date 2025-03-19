@@ -1,0 +1,137 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* ヘッダー */
+.header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #1a4b8c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-icon i {
+    color: white;
+    font-size: 24px;
+}
+
+.user-details {
+    margin-left: 16px;
+}
+
+.user-details span {
+    display: block;
+    font-size: 14px;
+    color: #1a4b8c;
+}
+
+.user-details h1 {
+    font-size: 20px;
+    color: #1a4b8c;
+}
+
+/* メッセージアイコン */
+.message-icon {
+    position: relative;
+}
+
+.message-icon i {
+    font-size: 24px;
+    color: #1a4b8c;
+}
+
+.unread-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* メインコンテンツ */
+.main-content {
+    margin-top: 24px;
+}
+
+.message-list h2 {
+    font-size: 24px;
+    color: #1a4b8c;
+}
+
+/* メッセージカード */
+.message-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-left-width: 4px solid transparent; /* デフォルトは透明 */
+}
+
+.message-card.unread {
+    background-color: #eff6ff; /* 未読メッセージの背景色 */
+}
+
+.message-card.urgent {
+    border-left-color: #ef4444; /* 緊急メッセージは赤いボーダー */
+}
+
+.message-card.normal {
+    border-left-color: #3b82f6; /* 通常メッセージは青いボーダー */
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.message-header h3 {
+    font-size: 18px;
+}
+
+.message-header span {
+    font-size: 14px;
+}
+
+.requires-response {
+    margin-top: 8px;
+    color: #ef4444; /* 必要な返信は赤で強調 */
+}
