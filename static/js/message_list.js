@@ -1,14 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const messageList = document.querySelector('.message-list');
+    const unreadMessagesList = document.getElementById('unread-messages');
     const unreadCountElement = document.querySelector('.unread-badge');
-    const csrftoken = document.querySelector('input[name=csrfmiddlewaretoken]')?.value;  // オプショナルチェイニング
+    const csrftoken = document.querySelector('input[name=csrfmiddlewaretoken]')?.value;
 
-    messageList.addEventListener('click', function(event) {
+    unreadMessagesList.addEventListener('click', function(event) {
         if (event.target.classList.contains('mark-read-btn')) {
             const messageId = event.target.dataset.messageId;
             const messageCard = event.target.closest('.message-card');
 
-            // CSRF トークンが存在するか確認
             if (!csrftoken) {
                 console.error('CSRF token not found.');
                 return;
@@ -27,21 +26,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     // メッセージカードを削除
                     messageCard.remove();
 
-                    // 未読カウントを減らす
-                    if (unreadCountElement) {
-                        let unreadCount = parseInt(unreadCountElement.textContent);
-                        if (unreadCount > 0) {
-                            unreadCount--;
-                            unreadCountElement.textContent = unreadCount;
-                        }
-                        // 未読数が0になったら非表示にする
-                        if (unreadCount <= 0) {
-                            unreadCountElement.style.display = 'none';
-                        }
-                    }
+                    // 未読カウントを更新
+                    updateUnreadCount();
                 }
             })
             .catch(error => console.error('Error:', error));
         }
     });
+
+    function updateUnreadCount() {
+        if (unreadCountElement) {
+            const currentCount = unreadMessagesList.querySelectorAll('.message-card').length;
+            unreadCountElement.textContent = currentCount;
+            unreadCountElement.style.display = currentCount > 0 ? 'inline' : 'none';
+            
+            // 未読メッセージがない場合のメッセージ表示
+            if (currentCount === 0) {
+                const emptyMessage = document.createElement('p');
+                emptyMessage.textContent = '未読メッセージはありません。';
+                unreadMessagesList.appendChild(emptyMessage);
+            }
+        }
+    }
 });
