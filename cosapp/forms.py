@@ -20,16 +20,22 @@ class CustomUserUpdateForm(forms.ModelForm):
             'phone_number': '電話番号',
         }
 
+
 class AdminMessageForm(forms.ModelForm):
+    send_to_all_users = forms.BooleanField(required=False, label='全ユーザーに送信')
+    recipient = forms.ModelChoiceField(
+        queryset=CustomUser.objects.filter(is_admin=False),
+        label="受信者",
+        required=False
+    )
+
     class Meta:
         model = AdminMessage
-        fields = ['recipient', 'subject', 'content']  # contentを追加
+        fields = ['subject', 'content']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['recipient'].queryset = CustomUser.objects.filter(is_admin=False)
-        
-        # contentフィールドのカスタマイズ（オプション）
         self.fields['content'].widget = forms.Textarea(attrs={
             'rows': 5,
             'placeholder': 'メッセージ本文を入力してください'

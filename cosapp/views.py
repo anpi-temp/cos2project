@@ -35,9 +35,40 @@ class UserListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+
+        # 管理者ユーザーを取得
+        context['admin_user'] = CustomUser.objects.filter(is_admin=True).first()
+
+        # 中間管理者ユーザーを取得
+        staff_count = 2  # 中間管理者のスロット数
+        staff_users = list(CustomUser.objects.filter(is_admin=False, is_staff=True)[:staff_count])
+
+        labels = ['スタッフA', 'スタッフB']  # 表示したい文字列リスト
+        staff_slots = []
+        for i in range(staff_count):
+            if i < len(staff_users):
+                # ユーザーが存在する場合
+                staff = staff_users[i]
+                staff_slots.append({
+                    'user': staff,
+                    'label': labels[i] if i < len(labels) else ''  # ラベルが足りない場合は空文字
+                })
+            else:
+                # ユーザーが存在しない場合、空スロットを作成
+                staff_slots.append({
+                    'user': None,
+                    'label': labels[i] if i < len(labels) else ''
+                })
+
+        context['staff_slots'] = staff_slots
+
+        users = list(self.get_queryset())
+        slots = users + [None] * (20 - len(users))
+        context['slots'] = slots
         context['admin_user'] = CustomUser.objects.filter(is_admin=True).first()
         return context
-
+    
 class UserCreateView(CreateView):
     model = CustomUser
     form_class = CustomUserCreationForm
@@ -55,16 +86,45 @@ class UserUpdateView(UpdateView):
     template_name = 'cosapp/dashboard/user_edit.html'
     success_url = reverse_lazy('user_list')
 
-class SendAdminMessageView(FormView):
+class SendAdminMessageView(LoginRequiredMixin, FormView):
+    login_url = 'admin_login'
     template_name = 'cosapp/dashboard/send_message.html'
     form_class = AdminMessageForm
     success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
-        message = form.save(commit=False)
-        message.sender = self.request.user  # 現在のユーザーを送信者として設定
-        message.save()
+        subject = form.cleaned_data['subject']
+        content = form.cleaned_data['content']
+        send_to_all = form.cleaned_data['send_to_all_users']
+        recipient = form.cleaned_data.get('recipient')
+
+        if send_to_all:
+            # 全ユーザーに送信
+            for user in CustomUser.objects.filter(is_admin=False):
+                AdminMessage.objects.create(
+                    recipient=user,
+                    subject=subject,
+                    content=content
+                )
+            messages.success(self.request, '全ユーザーにメッセージを送信しました。')
+        elif recipient:
+            # 単一ユーザーに送信
+            AdminMessage.objects.create(
+                recipient=recipient,
+                subject=subject,
+                content=content
+            )
+            messages.success(self.request, 'メッセージを送信しました。')
+        else:
+            messages.error(self.request, '受信者を選択してください。')
+            return self.form_invalid(form)
+
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # フォームが無効な場合のエラーメッセージを追加
+        messages.error(self.request, 'フォームにエラーがあります。修正してください。')
+        return super().form_invalid(form)
 
 
 class UserMessageListView(ListView):
@@ -174,11 +234,3 @@ class CustomLogoutView(View):
         logout(request)
         messages.success(request, 'ログアウトしました。')
         return redirect('admin_login')
-    
-class SomeView(TemplateView):
-    template_name = "cosapp/dashboard/index.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["key"] = "value"
-        return context

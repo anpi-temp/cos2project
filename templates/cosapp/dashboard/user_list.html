@@ -5,39 +5,70 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/user_list.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <div class="user-tree">
-    <!-- 管理人表示エリア -->
-    <div class="admin-node">
-      <div class="user-card admin">
-        <div class="user-info">
-          <span class="username">管理人: {{ admin_user.username }}</span>
-          <span class="phone">{{ admin_user.phone_number }}</span>
-        </div>
+  <!-- 管理人表示エリア -->
+  <div class="admin-node">
+    <div class="user-card admin">
+      <div class="user-info">
+        <span class="username">管理人: {{ admin_user.username }}</span>
+        <span class="phone">{{ admin_user.phone_number }}</span>
       </div>
     </div>
-  
-    <!-- ユーザー一覧（2列グリッド） -->
-    <div class="user-grid">
-      {% for user in users %}
-      <a href="{% url 'user_edit' user.id %}" class="user-card">
-        <div class="user-info">
-          <span class="username">{{ user.username }}</span>
-          <span class="phone">{{ user.phone_number }}</span>
-        </div>
-        <div class="user-actions">
-          <button class="edit-btn">編集</button>
-          <button class="delete-btn">削除</button>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-    <div class="back-to-dashboard">
-        <a href="{% url 'dashboard' %}" class="dashboard-btn">ダッシュボードに戻る</a>
-    </div>
   </div>
+
+  <div class="staff-grid">
+    {% for slot in staff_slots %}
+        <div class="staff-branch">
+            {% if slot.user %}
+                <!-- ユーザーが存在する場合 -->
+                <a href="{% url 'user_edit' slot.user.id %}" class="user-card">
+                    <div class="user-info">
+                        <span class="username">{{ slot.user.username }}</span>
+                        <span class="phone">{{ slot.user.phone_number }}</span>
+                        <span class="label">{{ slot.label }}</span>
+                    </div>
+                </a>
+            {% else %}
+                <!-- ユーザーが存在しない場合 -->
+                <a href="{% url 'user_create' %}" class="user-card empty-slot">
+                    <div class="user-info">
+                        <span class="label">{{ slot.label }}</span>
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+  <!-- ユーザー一覧（樹形図） -->
+  <div class="user-grid">
+    {% for slot in slots %}
+      {% if slot %}
+        <!-- 登録済みユーザー表示 -->
+        <div class="user-branch">
+          <a href="{% url 'user_edit' slot.id %}" class="user-card">
+            <div class="user-info">
+              <span class="username">{{ slot.username }}</span>
+              <span class="phone">{{ slot.phone_number }}</span>
+            </div>
+          </a>
+        </div>
+      {% else %}
+        <!-- 空スロット表示 -->
+        <div class="user-branch empty">
+          <a href="{% url 'user_create' %}" class="user-card empty-slot">
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<a href="{% url 'dashboard' %}" class="dashboard-btn">ダッシュボードに戻る</a>
 {% endblock %}
 
 {% block extra_js %}

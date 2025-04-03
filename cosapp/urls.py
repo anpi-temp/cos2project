@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (AdminView, UserListView, UserCreateView, AdminSetupView, AdminLoginView, SomeView,
+from .views import (AdminView, UserListView, UserCreateView, AdminSetupView, AdminLoginView,
                     UserDeleteView, UserUpdateView, SendAdminMessageView, UserMessageListView, CustomLogoutView,
                     AdminMessageViewSet, ReadMessageListView)
 
@@ -12,7 +12,6 @@ urlpatterns = [
     path('login/', AdminLoginView.as_view(), name='admin_login'),
     path('logout/', CustomLogoutView.as_view(), name='admin_logout'),
     path('dashboard/', AdminView.as_view(), name='dashboard'), 
-    path('index/', SomeView.as_view(), name='index'),
     path('dashboard/user_list/', UserListView.as_view(), name='user_list'),
     path('dashboard/user_create/', UserCreateView.as_view(), name='user_create'),
     path('dashboard/user_delete/<int:pk>/', UserDeleteView.as_view(), name='user_delete'),

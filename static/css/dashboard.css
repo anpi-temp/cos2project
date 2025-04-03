@@ -68,6 +68,24 @@
     display: block; /* アクティブなタブを表示 */
 }
 
+.main-image {
+    width: 50%;
+}
+
+.content-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+}
+
+h1, p {
+    color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
     .mobile-menu-toggle {
         display: block;

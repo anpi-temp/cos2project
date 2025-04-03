@@ -1,10 +1,44 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/send_message.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>メッセージ送信</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">送信</button>
-</form>
+<main class="main-content">
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">メッセージ送信</h2>
+            <p class="form-description">管理メッセージを送信します</p>
+        </div>
+        <div class="form-body">
+            <form method="post" class="message-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.recipient.id_for_label }}" class="form-label">受信者</label>
+                    {{ form.recipient }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">タイトル</label>
+                    {{ form.subject }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.content.id_for_label }}" class="form-label">メッセージ内容</label>
+                    {{ form.content }}
+                </div>
+
+                <div class="form-group inline">
+                    {{ form.send_to_all_users }}
+                    <label for="{{ form.send_to_all_users.id_for_label }}" class="form-label">全ユーザーに送信</label>
+                </div>
+                
+                <button type="submit" class="submit-button">送信</button>
+            </form>
+        </div>
+    </div>
+</main>
 {% endblock %}

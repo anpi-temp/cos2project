@@ -30,6 +30,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 25px 30px;
+    box-sizing: border-box;
 }
 
 .logo-container {
@@ -94,4 +95,13 @@ body {
 
 button {
     cursor: pointer;
+}
+
+.header-space {
+    padding: 10px;
+    background-color: var(--background-color);
+}
+
+a {
+    text-decoration: none;
 }

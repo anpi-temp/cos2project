@@ -15,14 +15,15 @@
         <header class="main-header">
             <!-- Flexboxでロゴとコントロールを分ける -->
             <div class="header-content">
-                <div class="logo-container">
-                    <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
-                    <div class="logo-text">
-                        <span class="bcp-text">BCP</span>
-                        <h1 class="system-name">安否確認システム</h1>
-                    </div>
+            <div class="logo-container">
+                <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
+                <div class="logo-text">
+                    <span class="bcp-text">BCP</span>
+                    <h1 class="system-name">安否確認システム</h1>
                 </div>
             </div>
+            </div>
+            <div class="header-space"></div>
             {% block header %}{% endblock %}
         </header>
 

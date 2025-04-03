@@ -1,21 +1,184 @@
 .user-tree {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 20px;
+    position: relative;
+    padding-top: 20px;
 }
 
+/* 管理人ノードのスタイル */
 .admin-node {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 40px; /* 幹のスペース確保 */
     position: relative;
 }
 
+.admin-node::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; /* 幹の長さ */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 40px;
+    background-color: #4a90e2;
+}
 
+
+.admin-node .admin-to-staff-connector { /* 管理者から中間管理者へのコネクタ */
+    position: absolute;
+    left: 50%; /* 管理者カードの中央 */
+    bottom: -20px; /* 管理者カードの下からの距離 */
+    width: 50px; /* コネクタの水平線の長さ */
+    height: 2px; /* 線の太さ */
+    background-color: #4a90e2; /* 色 */
+    transform: translateX(-50%); /* 中央揃え */
+}
+
+
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 最小150pxで自動調整 */
+    justify-content: flex-end; /* カードを右寄せにする */
+    align-items: center;
+    padding: 30px 0;
+    position: relative;
+    width: 50%; /* 必要に応じて幅を調整 */
+    margin-left: auto; /* 追加：右寄せにするために左マージンをautoに設定 */
+}
+
+.staff-grid::after {
+    content: '';
+    position: absolute;
+    top: -2px; /* 上部から枝を伸ばす */
+    width: 481px; /* 枝の長さ */
+    height: 2px; /* 枝の太さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+.staff-grid::before {
+    content: '';
+    position: absolute;
+    transform: translateX(-50%); /* 中央揃えを補正 */
+    top: -2px; /* 上部から枝を伸ばす */
+    width: 2px; /* 枝の長さ */
+    height: 138px; /* 枝の太さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+.staff-grid .user-branch {
+    text-align: center;
+    margin: 0 10px;
+}
+
+.staff-grid .user-card {
+    width: 210px; /* カードの幅 */
+    padding: 15px; /* カード内の余白 */
+    height: 40px; /* カードの高さ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #4a90e2; /* 枠線 */
+    background: #fff;
+}
+
+.staff-grid .user-card.empty-slot {
+    width: 210px; /* 中間管理者カードと同じ幅 */
+    height: 40px; /* 中間管理者カードと同じ高さ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #4a90e2; /* 枠線 */
+    background: var(--background-color);
+}
+
+.staff-branch {
+    position: relative; /* 疑似要素を親要素内で絶対位置に配置するため */
+}
+
+.staff-branch::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 枝がカードの上部からどれだけ離れるか */
+    left: 50%; /* 枝をカードの中央に揃える */
+    transform: translateX(-50%); /* 中央揃えを補正 */
+    width: 2px; /* 枝の幅 */
+    height: 30px; /* 枝の長さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+.staff-branch.empty::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 空スロットの場合も同じ位置に枝を伸ばす */
+    left: 50%; /* 枝をカードの中央に揃える */
+    transform: translateX(-50%); /* 中央揃えを補正 */
+    width: 2px; /* 枝の幅 */
+    height: 30px; /* 枝の長さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+/* ユーザーグリッド */
 .user-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(5, 1fr); /* 1行に最大5列 */
+    gap: 30px 25px; /* アイテム間のスペース */
+    padding-top: 30px;
 }
+
+/* ユーザーブランチ（各アイテム） */
+.user-branch {
+    position: relative;
+}
+
+/* 樹形図の縦線 */
+.user-branch::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 上部から枝を伸ばす */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 30px; /* 枝の長さ */
+    background-color: #4a90e2;
+}
+
+/* 樹形図の横線（最初の行） */
+.user-grid > *::after {
+    left: 50%;
+    content: '';
+    position: absolute;
+    top: -30px; /* 横線の位置 */
+    width: calc(100% + 26px); /* 横線の長さ */
+    height: 2px; /* 横線の高さ */
+    background-color: #4a90e2;
+}
+
+.user-grid > *:nth-child(5n)::after { /* 最後のアイテムには横線を描画しない */
+    display: none;
+}
+
+.user-grid > *:nth-child(n+6)::after { /* 最後のアイテムには横線を描画しない */
+    display: none;
+}
+  
+
+  
+  /* 2行目以降のユーザー枝 */
+.user-grid > *:nth-child(n+6) { /* 3番目以降の要素 */
+    position: relative;
+}
+  
+.user-grid > *:nth-child(n+6)::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 上のカードとの間隔 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 30px; /* 上のカードまで伸ばす */
+    background-color: #4a90e2;
+    z-index: 1;
+}
+
 
 .user-card {
     background: #fff;
@@ -28,11 +191,21 @@
     align-items: center;
     text-decoration: none;
     color: inherit;
+    width: 140px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.user-card.empty-slot {
+    width: 140px;
+    height: 39px;
 }
 
 .user-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 3; /* ホバー時にカードをツリーの上に表示 */
+    position: relative;
 }
 
 .user-card.admin {
@@ -40,6 +213,8 @@
     border: 2px solid #4a90e2;
     max-width: 300px;
     margin: 0 auto;
+    height: 26px;
+    padding: 20px 50px;
 }
 
 .user-info {
@@ -91,7 +266,9 @@
 }
 
 .dashboard-btn {
-    display: inline-block;
+    display: block;
+    width: fit-content;
+    margin: 50px auto 0 auto;
     padding: 10px 20px;
     background-color: var(--primary-color);
     color: white;
