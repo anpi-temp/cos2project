@@ -1,13 +1,21 @@
 .user-tree {
-    position: relative;
-    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* これで子要素が中央揃え */
+}
+
+.airplain2 {
+    width: 120px;
+    height: auto;
 }
 
 /* 管理人ノードのスタイル */
 .admin-node {
-    text-align: center;
-    margin-bottom: 40px; /* 幹のスペース確保 */
+    display: flex;
+    justify-content: center; /* 子要素を中央に */
+    width: 100%;
     position: relative;
+    margin-bottom: 40px;
 }
 
 .admin-node::after {
@@ -16,7 +24,7 @@
     bottom: -40px; /* 幹の長さ */
     left: 50%;
     transform: translateX(-50%);
-    width: 2px;
+    width: 4px;
     height: 40px;
     background-color: #4a90e2;
 }
@@ -27,12 +35,10 @@
     left: 50%; /* 管理者カードの中央 */
     bottom: -20px; /* 管理者カードの下からの距離 */
     width: 50px; /* コネクタの水平線の長さ */
-    height: 2px; /* 線の太さ */
+    height: 4px; /* 線の太さ */
     background-color: #4a90e2; /* 色 */
     transform: translateX(-50%); /* 中央揃え */
 }
-
-
 
 .staff-grid {
     display: grid;
@@ -49,19 +55,20 @@
     content: '';
     position: absolute;
     top: -2px; /* 上部から枝を伸ばす */
-    width: 481px; /* 枝の長さ */
-    height: 2px; /* 枝の太さ */
+    width: 75.3%; /* 枝の長さ */
+    height: 4px; /* 枝の太さ */
     background-color: #4a90e2; /* 枝の色 */
 }
 
 .staff-grid::before {
     content: '';
-    position: absolute;
-    transform: translateX(-50%); /* 中央揃えを補正 */
-    top: -2px; /* 上部から枝を伸ばす */
-    width: 2px; /* 枝の長さ */
-    height: 138px; /* 枝の太さ */
-    background-color: #4a90e2; /* 枝の色 */
+    position: absolute;                      /* 中央に配置 */
+    top: -2px;
+    transform: translateX(-50%);     /* 中央揃え補正 */
+    width: 4px;
+    height: 112px;
+    background-color: #4a90e2;
+    z-index: 2;
 }
 
 .staff-grid .user-branch {
@@ -76,7 +83,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #4a90e2; /* 枠線 */
+    border: 4px solid #4a90e2; /* 枠線 */
     background: #fff;
 }
 
@@ -86,7 +93,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #4a90e2; /* 枠線 */
+    border: 4px solid #4a90e2; /* 枠線 */
     background: var(--background-color);
 }
 
@@ -100,7 +107,7 @@
     top: -30px; /* 枝がカードの上部からどれだけ離れるか */
     left: 50%; /* 枝をカードの中央に揃える */
     transform: translateX(-50%); /* 中央揃えを補正 */
-    width: 2px; /* 枝の幅 */
+    width: 4px; /* 枝の幅 */
     height: 30px; /* 枝の長さ */
     background-color: #4a90e2; /* 枝の色 */
 }
@@ -111,16 +118,66 @@
     top: -30px; /* 空スロットの場合も同じ位置に枝を伸ばす */
     left: 50%; /* 枝をカードの中央に揃える */
     transform: translateX(-50%); /* 中央揃えを補正 */
-    width: 2px; /* 枝の幅 */
+    width: 4px; /* 枝の幅 */
     height: 30px; /* 枝の長さ */
     background-color: #4a90e2; /* 枝の色 */
 }
+
+
+.user-list-line-wrapper {
+    position: relative;
+}
+  
+.airplain-on-line {
+    position: absolute;
+    top: 0;
+    left: 50%; /* 線の中央に配置 */
+    transform: translate(-50%, -60%); /* 画像の大きさに合わせて微調整 */
+    width: 80px; /* 画像サイズはお好みで */
+    height: auto;
+    z-index: 2;
+    pointer-events: none; /* クリックを透過させたい場合 */
+}
+
+.user-tree-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* ユーザー数に合わせて変更 */
+  grid-template-rows: 30px 60px auto;    /* 横線・紙飛行機・ユーザー */
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.horizontal-line {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: 4px;
+  background: #b0c4de;
+  width: 100%;
+  align-self: center;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.airplane {
+  width: 40px;
+  height: auto;
+  margin: 0 auto;
+  align-self: end;
+  z-index: 2;
+  /* 必要に応じて上下位置を微調整 */
+}
+
+.user-branch {
+  margin-top: 10px;
+}
+
 
 /* ユーザーグリッド */
 .user-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 1行に最大5列 */
-    gap: 30px 25px; /* アイテム間のスペース */
+    gap: 40px 80px; /* アイテム間のスペース */
     padding-top: 30px;
 }
 
@@ -133,12 +190,13 @@
 .user-branch::before {
     content: '';
     position: absolute;
-    top: -30px; /* 上部から枝を伸ばす */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 30px; /* 枝の長さ */
+    top: -30px;
+    left: 50%;                       /* 中央に配置 */
+    transform: translateX(-50%);     /* 中央揃え補正 */
+    width: 4px;
+    height: 30px;
     background-color: #4a90e2;
+    z-index: 2;
 }
 
 /* 樹形図の横線（最初の行） */
@@ -147,8 +205,8 @@
     content: '';
     position: absolute;
     top: -30px; /* 横線の位置 */
-    width: calc(100% + 26px); /* 横線の長さ */
-    height: 2px; /* 横線の高さ */
+    width: calc(100% + 79px); /* 横線の長さ */
+    height: 4px; /* 横線の高さ */
     background-color: #4a90e2;
 }
 
@@ -170,11 +228,11 @@
 .user-grid > *:nth-child(n+6)::before {
     content: '';
     position: absolute;
-    top: -30px; /* 上のカードとの間隔 */
+    top: -50px; /* 上のカードとの間隔 */
     left: 50%;
     transform: translateX(-50%);
-    width: 2px;
-    height: 30px; /* 上のカードまで伸ばす */
+    width: 4px;
+    height: 50px; /* 上のカードまで伸ばす */
     background-color: #4a90e2;
     z-index: 1;
 }
@@ -210,11 +268,12 @@
 
 .user-card.admin {
     background: #f8f9fa;
-    border: 2px solid #4a90e2;
-    max-width: 300px;
+    border: 4px solid #4a90e2;
+    justify-content: center;
+    max-width: 240px;
+    width: 100%; 
     margin: 0 auto;
-    height: 26px;
-    padding: 20px 50px;
+    text-align: center;
 }
 
 .user-info {

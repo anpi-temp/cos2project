@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+
+.main-content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+  
+.title {
+    text-align: center;
+    color: #c0392b; /* 削除のイメージカラー */
+}
+  
+.warning-message {
+    color: #e74c3c; /* 警告色 */
+    font-weight: bold;
+}
+  
+  /* ボタンのグループ */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.delete-button,
+.cancel-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+  
+.delete-button {
+    background-color: #e74c3c; /* 削除ボタンの背景色 */
+    color: white;
+}
+  
+.delete-button:hover {
+    background-color: #c0392b; /* ホバー時の色変更 */
+}
+  
+.cancel-button {
+    background-color: #3498db; /* キャンセルボタンの背景色 */
+    color: white;
+}
+  
+.cancel-button:hover {
+    background-color: #2980b9; /* ホバー時の色変更 */
+}

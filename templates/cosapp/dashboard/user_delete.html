@@ -1,17 +1,25 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}ユーザー削除確認{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/user_delete.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>ユーザー削除確認</h1>
-    <p>以下のユーザーを削除しますか？</p>
-    <p><strong>ユーザー名:</strong> {{ object.username }}</p>
-    
-    <form method="post">
-        {% csrf_token %}
-        <p>この操作は取り消せません。本当に削除しますか？</p>
-        <button type="submit" class="btn btn-danger">削除する</button>
-    </form>
+<div class="main-content">
+  <h1 class="title">ユーザー削除確認</h1>
+  <p>以下のユーザーを削除しますか？</p>
+  <p><strong>ユーザー名:</strong> {{ object.username }}</p>
+
+  <form method="post" class="form">
+    {% csrf_token %}
+    <p class="warning-message">この操作は取り消せません。本当に削除しますか？</p>
+
+    <!-- ボタン -->
+    <div class="button-group">
+      <p><button type="submit" name="confirm_delete" class="delete-button">削除する</button></p>
+      <a href="{% url 'user_list' %}" class="cancel-button">キャンセル</a>
+    </div>
+  </form>
 </div>
 {% endblock %}

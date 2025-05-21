@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}安否確認システム{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     {% block extra_head %}{% endblock %}
@@ -41,6 +42,8 @@
         <footer class="main-footer">
             {% block footer %}
             <!-- デフォルトのフッター内容 -->
+            <p class="footer-phone"><i class="fas fa-phone"></i> 080-0123-4567</p>
+            <p class="footer-copyright">Copyright &copy; 2025 Grow Up. All rights reserved.</p>
             {% endblock %}
         </footer>
     </div>

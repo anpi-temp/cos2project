@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ダッシュボード - 安否確認システム{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block header_controls %}
+<button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars menu-icon"></i>
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="tab-menu" id="tabMenu">
+        <div class="tabs">
+            <!-- URLパターンに基づいたリンク -->
+            <a href="{% url 'user_list' %}" class="tab-button {% if selectedTab == 'userList' %}active{% endif %}" data-tab="userList">ユーザー一覧</a>
+            <a href="{% url 'user_create' %}" class="tab-button {% if selectedTab == 'userRegister' %}active{% endif %}" data-tab="userRegister">ユーザー登録</a>
+            <a href="{% url 'send_admin_message' %}" class="tab-button {% if selectedTab == 'sendMessage' %}active{% endif %}" data-tab="sendMessage">メッセージ送信</a>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="text-content">
+            <h1>従業員の安全を最優先に</h1>
+            <p>災害発生時に素早く従業員の安否を確認し、<br>
+                適切な支援と対応を実現する安否確認システム</p>
+        </div>
+        <img src="/static/images/main2.png" class="main-img2">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

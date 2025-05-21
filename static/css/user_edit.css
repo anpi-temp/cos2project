@@ -65,3 +65,15 @@
     margin: 20px auto;
     padding: 20px;
 }
+
+.dashboard-btn {
+    display: block;
+    width: fit-content;
+    margin: 50px auto 0 auto;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}

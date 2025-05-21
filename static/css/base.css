@@ -1,10 +1,14 @@
 :root {
     --primary-color: #1a4b8c;
     --hover-color: #2961b3;
-    --background-color: #f8fafc;
+    --background-color:#cdedf5;
     --white: #ffffff;
     --gray-text: #6b7280;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 body {
@@ -29,7 +33,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 30px;
+    padding: 60px 40px;
     box-sizing: border-box;
 }
 
@@ -40,7 +44,7 @@ body {
 }
 
 .logo-icon {
-    width: 320px; /* ロゴの幅を大きくする */
+    width: 420px; /* ロゴの幅を大きくする */
     object-fit: contain;
 }
 
@@ -50,13 +54,13 @@ body {
 }
 
 .bcp-text {
-    font-size: 1rem; /* フォントサイズを少し大きくする */
+    font-size: 1.3rem; /* フォントサイズを少し大きくする */
     color: var(--primary-color);
     font-weight: 500;
 }
 
 .system-name {
-    font-size: 1.5rem; /* フォントサイズを大きくする */
+    font-size: 2rem; /* フォントサイズを大きくする */
     font-weight: bold;
     color: var(--primary-color);
     margin: 10px 0;
@@ -71,7 +75,7 @@ body {
 .logout-button {
     background-color: var(--primary-color);
     color: var(--white);
-    padding: 0.5rem 1rem;
+    padding: 16px 32px;
     border-radius: 0.5rem;
     text-decoration: none;
     transition: background-color 0.3s ease;
