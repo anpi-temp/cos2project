@@ -10,9 +10,7 @@
 
 {% block content %}
 
-<div>
-  <img src="/static/images/airplain2.png" class="airplain2" alt="">
-</div>
+<img src="/static/images/airplain2.png" class="airplain2" alt="紙飛行機">
 
 <div class="user-tree">
   <!-- 管理人表示エリア -->
@@ -23,11 +21,6 @@
         <span class="phone">{{ admin_user.phone_number }}</span>
       </div>
     </div>
-  </div>
-
-  <div class="user-list-line-wrapper">
-    <div class="user-list-line"></div>
-    <img src="{% static 'images/airplain2.png' %}" class="airplain-on-line" alt="紙飛行機">
   </div>
 
   <div class="staff-grid">
@@ -54,11 +47,6 @@
     {% endfor %}
 </div>
 
-<div class="user-list-line-wrapper">
-  <div class="user-list-line"></div>
-  <img src="{% static 'images/airplain2.png' %}" class="airplain-on-line" alt="紙飛行機">
-</div>
-
   <!-- ユーザー一覧（樹形図） -->
   <div class="user-grid">
     {% for slot in slots %}
@@ -83,7 +71,7 @@
   </div>
 </div>
 
-<a href="{% url 'dashboard' %}" class="dashboard-btn">ダッシュボードに戻る</a>
+<a href="{% url 'dashboard' %}" class="dashboard-btn">トップページに戻る</a>
 {% endblock %}
 
 {% block extra_js %}

@@ -1,3 +1,7 @@
+body {
+    background-color: #b0ebf9;
+}
+
 /* 新しいスタイルの範囲 */
 .form-container {
     background-color: var(--white);
@@ -5,7 +9,7 @@
     box-shadow: var(--shadow-sm);
     padding: 2rem;
     max-width: 600px;
-    margin: 2rem auto;
+    margin: 80px auto;
 }
 
 .form-header {

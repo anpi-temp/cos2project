@@ -8,11 +8,11 @@
 {% block content %}
 <main class="main-content">
     <div class="user-form">
-        <h2>ユーザー情報編集</h2>
+        <h2>利用者情報編集</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
+                <label for="{{ form.username.id_for_label }}">利用者名:</label>
                 {{ form.username }}
             </div>
             <div class="form-group">
@@ -24,6 +24,7 @@
                 <a href="{% url 'user_delete' object.id %}" class="btn btn-danger">アカウントを削除</a>
             </div>
         </form>
+        <a href="{% url 'dashboard' %}" class="dashboard-btn">トップページに戻る</a>
     </div>
 </main>
 {% endblock %}

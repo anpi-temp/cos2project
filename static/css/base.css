@@ -21,12 +21,13 @@ body {
 .container {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 50px 16px 26px 16px;
 }
 
 .main-header {
     background-color: var(--white);
     box-shadow: var(--shadow-sm);
+    border-radius: 5px;
 }
 
 .header-content {
@@ -86,7 +87,7 @@ body {
 }
 
 .main-content {
-    margin-top: 2rem;
+    margin: 80px 0;
 }
 
 .main-footer {
@@ -95,17 +96,105 @@ body {
     background-color: var(--white);
     box-shadow: var(--shadow-sm);
     margin-top: 2rem;
+    border-radius: 5px;
 }
 
 button {
     cursor: pointer;
 }
 
-.header-space {
-    padding: 10px;
-    background-color: var(--background-color);
-}
 
 a {
     text-decoration: none;
 }
+
+
+/* nav */
+
+.admin-nav {
+    background: #1a4b8c;
+    padding: 6px 32px;
+  }
+  
+  .nav-container {
+    display: flex;
+    max-width: 100vw;
+    margin: 0 auto;
+    justify-content: end;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .nav-item {
+    position: relative;
+  }
+  
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background 0.3s;
+    border-radius: 6px;
+    outline: none;
+    text-decoration: none;
+  }
+  
+  .nav-btn:hover,
+  .nav-btn:focus {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .nav-btn--plain {
+    text-decoration: none;
+  }
+  
+  .dropdown-menu {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 0 0 6px 6px;
+    margin-top: 2px;
+    padding: 0.5rem 0;
+    position: absolute;
+    left: 0;
+    min-width: 180px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.25s, transform 0.25s;
+    list-style: none;   /* ← 追加 */
+    margin: 0;          /* ← 追加 */
+    padding: 0;         /* ← 追加 */
+  }
+  
+  /* ホバー・フォーカス時に表示＆浮き上がり */
+  .nav-item.dropdown:hover > .dropdown-menu,
+  .nav-item.dropdown:focus-within > .dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+  
+  .dropdown-menu li a {
+    display: block;
+    color: #1a4b8c;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    transition: background 0.2s;
+    border-radius: 0;
+  }
+  
+  .dropdown-menu li a:hover,
+  .dropdown-menu li a:focus {
+    background: #f5f5f5;
+    color: #1a4b8c;
+    text-decoration: none;
+  }
