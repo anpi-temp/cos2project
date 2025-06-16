@@ -6,13 +6,17 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, AdminMessageForm
 from .models import AdminMessage
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import AdminMessageSerializer
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.paginator import Paginator
 
 CustomUser = get_user_model()
 
@@ -24,6 +28,12 @@ class AdminView(LoginRequiredMixin, View):
         if not request.user.is_admin:  # 管理者フラグでチェック
             return redirect('admin_login')
         return render(request, self.template_name)
+    
+def dashboard_alt(request):
+    return render(request, 'cosapp/dashboard/dashboard_alt.html')
+
+def dashboard_alt2(request):
+    return render(request, 'cosapp/dashboard/dashboard_alt2.html')
 
 class UserListView(ListView):
     template_name = 'cosapp/dashboard/user_list.html'
@@ -34,7 +44,6 @@ class UserListView(ListView):
         return CustomUser.objects.filter(is_admin=False)
     
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         context = super().get_context_data(**kwargs)
 
         # 管理者ユーザーを取得
@@ -66,8 +75,72 @@ class UserListView(ListView):
         users = list(self.get_queryset())
         slots = users + [None] * (20 - len(users))
         context['slots'] = slots
+        context['user_slots'] = [slots[i*4:(i+1)*4] for i in range(5)]
         context['admin_user'] = CustomUser.objects.filter(is_admin=True).first()
         return context
+
+
+def test_view(request):
+    # 管理者
+    admin_user = CustomUser.objects.filter(is_admin=True).first()
+
+    # スタッフ
+    staff_count = 2
+    staff_users = list(CustomUser.objects.filter(is_admin=False, is_staff=True)[:staff_count])
+    labels = ['スタッフA', 'スタッフB']
+    staff_slots = []
+    for i in range(staff_count):
+        staff = staff_users[i] if i < len(staff_users) else None
+        staff_slots.append({
+            'user': staff,
+            'label': labels[i]
+        })
+
+    # 通常ユーザー（is_admin=False, is_staff=False）
+    users = list(CustomUser.objects.filter(is_admin=False, is_staff=False).values('id', 'username'))
+    slots = users + [None] * (20 - len(users))
+    user_slots = [slots[i*4:(i+1)*4] for i in range(5)]
+
+    # JSONとしてJavaScriptに渡す用
+    user_slots_json = json.dumps(user_slots, cls=DjangoJSONEncoder)
+
+    return render(request, 'cosapp/dashboard/test.html', {
+        'admin_user': admin_user,
+        'staff_slots': staff_slots,
+        'user_slots': user_slots,             # テンプレート初期描画用
+        'user_slots_json': user_slots_json,   # JavaScript用
+    })
+
+def dashboard_test2(request):
+    admin_user = CustomUser.objects.filter(is_admin=True).first()
+
+    # スタッフ
+    staff_count = 2
+    staff_users = list(CustomUser.objects.filter(is_admin=False, is_staff=True)[:staff_count])
+    labels = ['スタッフA', 'スタッフB']
+    staff_slots = []
+    for i in range(staff_count):
+        staff = staff_users[i] if i < len(staff_users) else None
+        staff_slots.append({
+            'user': staff,
+            'label': labels[i]
+        })
+
+    # 通常ユーザー（is_admin=False, is_staff=False）
+    users = list(CustomUser.objects.filter(is_admin=False, is_staff=False).values('id', 'username'))
+    slots = users + [None] * (20 - len(users))
+    user_slots = [slots[i*4:(i+1)*4] for i in range(5)]
+
+    # JSONとしてJavaScriptに渡す用
+    user_slots_json = json.dumps(user_slots, cls=DjangoJSONEncoder)
+
+    return render(request, 'cosapp/dashboard/dashboard_test2.html', {
+        'admin_user': admin_user,
+        'staff_slots': staff_slots,
+        'user_slots': user_slots,             # テンプレート初期描画用
+        'user_slots_json': user_slots_json,   # JavaScript用
+    })
+
     
 class UserCreateView(CreateView):
     model = CustomUser
@@ -90,7 +163,7 @@ class SendAdminMessageView(LoginRequiredMixin, FormView):
     login_url = 'admin_login'
     template_name = 'cosapp/dashboard/send_message.html'
     form_class = AdminMessageForm
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('dashboard_alt2')
 
     def form_valid(self, form):
         subject = form.cleaned_data['subject']
@@ -125,6 +198,11 @@ class SendAdminMessageView(LoginRequiredMixin, FormView):
         # フォームが無効な場合のエラーメッセージを追加
         messages.error(self.request, 'フォームにエラーがあります。修正してください。')
         return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = CustomUser.objects.filter(is_admin=False)
+        return context
 
 
 class UserMessageListView(ListView):
@@ -216,7 +294,7 @@ class AdminLoginView(View):
         
         if user is not None and user.is_admin:  # 管理者フラグでチェック
             login(request, user)
-            return redirect('/dashboard/')
+            return redirect('dashboard_alt')
         else:
             messages.error(request, '無効な資格情報です。')
             return render(request, 'cosapp/dashboard/admin_login.html')
@@ -234,3 +312,27 @@ class CustomLogoutView(View):
         logout(request)
         messages.success(request, 'ログアウトしました。')
         return redirect('admin_login')
+
+class AdminMessageHistoryView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = AdminMessage
+    template_name = 'cosapp/dashboard/admin_message_history.html'
+    context_object_name = 'messages'  # ← 変更
+    paginate_by = 10
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        user_id = self.request.GET.get('user_id')
+        queryset = AdminMessage.objects.all().order_by('-created_at')
+        if user_id:
+            queryset = queryset.filter(recipient_id=user_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = CustomUser.objects.filter(is_staff=False)  # ドロップダウン用
+        context['selected_user_id'] = self.request.GET.get('user_id')
+        return context
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_admin
+    

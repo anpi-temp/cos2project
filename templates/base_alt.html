@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}安否確認システム{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/base_alt.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="container">
+
+    <!-- ハンバーガーメニューとナビゲーション（PC/SP両対応） -->
+    <input type="checkbox" id="menu-toggle" class="menu-toggle">
+    <label for="menu-toggle" class="hamburger">&#9776;</label>
+
+    <nav class="admin-nav">
+    <ul class="nav-container">
+        <li class="nav-item">
+        <a href="{% url 'dashboard_alt' %}" class="nav-btn">
+            <i class="fas fa-home"></i><span>トップページ</span>
+        </a>
+        </li>
+
+        <!-- ▼ ユーザー管理：サブメニュー開閉対応 ▼ -->
+        <li class="nav-item dropdown">
+        <a href="javascript:void(0);" class="nav-btn submenu-toggle">
+            <i class="fas fa-users-cog"></i><span>ユーザー管理</span>
+        </a>
+        <ul class="dropdown-menu submenu-panel">
+            <li><a href="{% url 'dashboard_test' %}">利用者一覧表示</a></li>
+            <li><a href="{% url 'user_create' %}">利用者新規登録</a></li>
+        </ul>
+        </li>
+
+        <li class="nav-item">
+        <a href="{% url 'send_admin_message' %}" class="nav-btn">
+            <i class="fas fa-paper-plane"></i><span>メッセージ送信</span>
+        </a>
+        </li>
+    </ul>
+    </nav>
+
+    <!-- ヘッダー：ロゴとタイトル -->
+    <header class="main-header">
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
+          <div class="logo-text">
+            <span class="bcp-text">事業継続計画（BCP）</span>
+            <h1 class="system-name">安否確認システム</h1>
+          </div>
+        </div>
+        <div class="header-controls">
+          {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'admin_logout' %}" class="logout-button">ログアウト</a>
+          {% endif %}
+          {% block header_controls %}{% endblock %}
+        </div>
+      </div>
+      {% block header %}{% endblock %}
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- フッター -->
+    <footer class="main-footer">
+      {% block footer %}
+      <p class="footer-phone"><i class="fas fa-phone"></i> 080-0123-4567</p>
+      <p class="footer-copyright">Copyright &copy; 2025 Grow Up. All rights reserved.</p>
+      {% endblock %}
+    </footer>
+  </div>
+
+  {% block extra_js %}{% endblock %}
+
+  {% load static %}
+    <script src="{% static 'js/base.js' %}"></script>
+</body>
+</html>

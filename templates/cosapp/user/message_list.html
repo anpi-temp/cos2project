@@ -5,52 +5,61 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/message_list.css' %}">
+    <!-- Font Awesome（アイコン用） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}
 
 {% block header %}
-    <div class="user-info-header">
-        <div class="user-info">
-            <div class="user-icon">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="user-details">
-                <span>ようこそ</span>
-                <h1>{{ recipient.username }} さん</h1>
-            </div>
+<div class="user-info-header">
+    <div class="user-info">
+        <div class="user-icon">
+            <i class="fas fa-user"></i>
         </div>
-        <div class="message-icon">
-            <i class="fas fa-envelope"></i>
-            {% if unread_count > 0 %}
-                <span class="unread-badge">{{ unread_count }}</span>
-            {% endif %}
+        <div class="user-details">
+            <span class="welcome-text">ようこそ</span>
+            <h1 class="username">{{ recipient.username }} さん</h1>
         </div>
     </div>
+    <div class="message-icon">
+        <i class="fas fa-envelope"></i>
+        {% if unread_count > 0 %}
+            <span class="unread-badge">{{ unread_count }}</span>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
-    {% csrf_token %}
-    <section class="message-list">
-        <h2>未読メッセージ一覧</h2>
-        <div id="unread-messages">
+<section class="message-list-section">
+    <div class="message-list-container">
+        <h2 class="messages-title">未読メッセージ一覧</h2>
+        <div id="unread-messages" class="messages-list">
             {% if messages %}
                 {% for message in messages %}
                     {% if not message.is_read %}
                         <div class="message-card unread" data-message-id="{{ message.id }}">
                             <div class="message-header">
-                                <h3>{{ message.subject }}</h3>
-                                <span>{{ message.created_at|date:"Y-m-d" }}</span>
+                                <h3 class="message-subject">{{ message.subject }}</h3>
+                                <span class="message-date">{{ message.created_at|date:"Y-m-d" }}</span>
                             </div>
-                            <p>{{ message.content }}</p>
-                            <button class="mark-read-btn" data-message-id="{{ message.id }}">既読にする</button>
+                            <p class="message-content">{{ message.content }}</p>
+                            <button class="mark-read-btn" data-message-id="{{ message.id }}">
+                                <i class="fas fa-check"></i>
+                                <span>既読にする</span>
+                            </button>
                         </div>
                     {% endif %}
                 {% endfor %}
-            {% else %}
-                <p>未読メッセージはありません。</p>
             {% endif %}
         </div>
-    </section>
-    <a href="{% url 'read_message_list' user_id=recipient.id %}" id="read-messages-link">既読メッセージを表示</a>
+        <div class="read-link">
+            <a href="{% url 'read_message_list' user_id=recipient.id %}">
+                <i class="fas fa-history"></i>
+                <span>既読メッセージを表示</span>
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}

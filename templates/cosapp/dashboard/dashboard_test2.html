@@ -1,0 +1,200 @@
+{% extends "base_alt2.html" %}
+{% load static %}
+
+{% block title %}ユーザー一覧 - 安否確認システム{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/test.css' %}">
+<style>
+  body {
+    background-image: url("{% static 'images/main28.jpg' %}");
+    background-size: cover;
+    background-color: rgba(255,255,255,0.2);
+  }
+  .carousel-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  gap: 15px;
+}
+
+.arrow-btn {
+  flex: 0 0 40px;
+  height: 40px;
+  background: #4ad4d0;
+  border: none;
+  color: white;
+  font-size: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.carousel-card-container {
+  flex: 1;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  gap: 10px;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+
+  .carousel-indicator {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .carousel-slide {
+    padding: 20px 12px; /* ← 内側に余白を持たせて「縮んでる」印象 */
+  }
+
+  .carousel-controls {
+    gap: 10px;
+  }
+    .arrow-btn {
+      width: 36px;
+    }
+
+    .carousel-card-container {
+      max-width: 100%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="org-wrapper">
+  <div class="org-level admin">
+    管理者：
+    {% if admin_user %}
+      {{ admin_user.username }}
+    {% else %}
+      （管理者未登録）
+    {% endif %}
+  </div>
+
+  <div class="org-level staff-list">
+    <div class="staff-card-list">
+      {% for slot in staff_slots %}
+      <div class="staff-card">
+        <strong>{{ slot.label }}</strong><br>
+        {% if slot.user %}
+          {{ slot.user.username }}
+        {% else %}
+          <span class="empty">未登録</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="carousel-wrapper">
+    <div class="carousel-controls">
+      <button class="arrow-btn" onclick="prevGroup()">◀</button>
+      <div class="carousel-card-container">
+        <div id="carousel-track" class="carousel-track"></div>
+      </div>
+      <button class="arrow-btn" onclick="nextGroup()">▶</button>
+    </div>
+    <div class="carousel-indicator" id="carousel-indicator">1 / {{ user_slots|length }}</div>
+  </div>
+</div>
+
+<div class="bottom-links">
+  <a href="{% url 'send_admin_message' %}" class="message-btn">メッセージ送信</a>
+  <a href="{% url 'dashboard_alt2' %}" class="dashboard-btn">トップページに戻る</a>
+</div>
+
+<script id="userGroupsJSON" type="application/json">
+  {{ user_slots_json|safe }}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let currentIndex = 0;
+  let userGroups = [];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    try {
+      userGroups = JSON.parse(document.getElementById('userGroupsJSON').textContent);
+      generateSlides();
+      updateCarousel();
+    } catch (error) {
+      console.error("❌ JSONパースエラー:", error);
+    }
+  });
+
+  window.addEventListener("resize", updateCarousel);
+
+  function generateSlides() {
+    const track = document.getElementById('carousel-track');
+    track.innerHTML = "";
+
+    userGroups.forEach((group, index) => {
+      const slide = document.createElement('div');
+      slide.classList.add('carousel-slide');
+
+      let html = `<div class='staff-name'>利用者グループ${index + 1}</div><ul class='subordinates'>`;
+      for (const user of group) {
+        if (user) {
+          html += `<li><a href='/dashboard/user_edit/${user.id}/'>${user.username}</a></li>`;
+        } else {
+          html += `<li class='empty'><a href='/dashboard/user_create/'>空き</a></li>`;
+        }
+      }
+      html += '</ul>';
+      slide.innerHTML = html;
+      track.appendChild(slide);
+    });
+  }
+
+  function updateCarousel() {
+    const track = document.getElementById('carousel-track');
+    const indicator = document.getElementById('carousel-indicator');
+    const slide = document.querySelector('.carousel-slide');
+    if (!slide) return;
+
+    const slideWidth = slide.offsetWidth + 10; // ← マージン不要、padding込み幅でOK
+    const offset = -slideWidth * currentIndex;
+    track.style.transform = `translateX(${offset}px)`;
+    indicator.textContent = `${currentIndex + 1} / ${userGroups.length}`;
+  }
+
+  function prevGroup() {
+    currentIndex = (currentIndex - 1 + userGroups.length) % userGroups.length;
+    updateCarousel();
+  }
+
+  function nextGroup() {
+    currentIndex = (currentIndex + 1) % userGroups.length;
+    updateCarousel();
+  }
+</script>
+{% endblock %}

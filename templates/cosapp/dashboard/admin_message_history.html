@@ -1,0 +1,92 @@
+{% extends 'base_alt2.html' %}
+{% load tz %}
+{% load static %}
+
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/admin_message_history.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'images/main29.jpg' %}");
+            background-size: contain;
+            background-color: rgba(255,255,255,0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <div class="history-container">
+        <div class="history-header">
+            <h2 class="history-title">送信済みメッセージ履歴</h2>
+            <p class="history-description">過去に送信した管理者メッセージ一覧です</p>
+        </div>
+
+        <div class="history-body">
+            <form method="get" action="{% url 'admin_message_history' %}" class="user-filter-form" id="user-filter-form">
+                <label for="user_id">ユーザーで絞り込み:</label>
+                <select name="user_id" id="user_id" onchange="document.getElementById('user-filter-form').submit();">
+                    <option value="">全ユーザー</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_user_id %}selected{% endif %}>
+                        {{ user.username }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+            <ul class="message-history-list">
+                {% for msg in messages %}
+                    <li class="message-history-item">
+                        <div class="message-meta">
+                            <div><span class="label">宛先:</span> {{ msg.recipient.username }}</div>
+                            <div><span class="label">件名:</span> {{ msg.subject }}</div>
+                            <div><span class="label">日時:</span> {{ msg.created_at|localtime|date:"Y/m/d H:i" }}</div>
+                            <div><span class="label">状態:</span>
+                                {% if msg.is_read %}
+                                    <span class="read">既読</span>
+                                {% else %}
+                                    <span class="unread">未読</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="message-content">
+                            {{ msg.content|linebreaksbr }}
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="message-history-item">まだ送信されたメッセージはありません。</li>
+                {% endfor %}
+            </ul>
+
+            {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if selected_user_id %}user_id={{ selected_user_id }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo;</a>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                    {% if i == 1 or i == page_obj.paginator.num_pages or i|add:'-1' == page_obj.number or i == page_obj.number or i|add:'1' == page_obj.number %}
+                        {% if i == page_obj.number %}
+                            <span class="current-page active">{{ i }}</span>
+                        {% else %}
+                            <a href="?{% if selected_user_id %}user_id={{ selected_user_id }}&{% endif %}page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% elif i == 2 and page_obj.number > 4 %}
+                        <span>…</span>
+                    {% elif i == page_obj.paginator.num_pages|add:'-1' and page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                        <span>…</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?{% if selected_user_id %}user_id={{ selected_user_id }}&{% endif %}page={{ page_obj.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'send_admin_message' %}" class="dashboard-btn">メッセージ送信に戻る</a>
+    <a href="{% url 'dashboard_alt2' %}" class="dashboard-btn">トップページに戻る</a>
+</main>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base_alt.html" %}
+{% load static %}
+
+{% block title %}ユーザー一覧 - 安否確認システム{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/test.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="org-wrapper">
+  <div class="org-level admin">
+    管理者：
+    {% if admin_user %}
+      {{ admin_user.username }}
+    {% else %}
+      （管理者未登録）
+    {% endif %}
+  </div>
+
+  <div class="org-level staff-list">
+    <div class="staff-card-list">
+        {% for slot in staff_slots %}
+        <div class="staff-card">
+            <strong>{{ slot.label }}</strong><br>
+            {% if slot.user %}
+            {{ slot.user.username }}
+            {% else %}
+            <span class="empty">未登録</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+
+  <div class="org-level staff">
+    {% for slot in user_slots %}
+        <div class="staff-node toggle-card {% if forloop.counter == 5 %}centered{% endif %}">
+        <div class="staff-name">利用者グループ{{ forloop.counter }}</div>
+        <button class="show-details">+ 詳細</button>
+        <ul class="subordinates hidden">
+            {% for user in slot %}
+            {% if user %}
+                <li><a href="{% url 'user_edit' user.id %}">{{ user.username }}</a></li>
+            {% else %}
+                <li class="empty"><a href="{% url 'user_create' %}">空き</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="bottom-links">
+  <a href="{% url 'send_admin_message' %}" class="message-btn">メッセージ送信</a>
+  <a href="{% url 'dashboard_alt' %}" class="dashboard-btn">トップページに戻る</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 詳細ボタンによる開閉
+    document.querySelectorAll('.show-details').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); // ボタンが親カードをトリガーしないようにする
+        const list = btn.nextElementSibling;
+        list.classList.toggle('hidden');
+        btn.textContent = list.classList.contains('hidden') ? '+ 詳細' : '− 閉じる';
+      });
+    });
+
+    // カード全体クリックでも開閉できるようにする
+    document.querySelectorAll('.toggle-card').forEach(card => {
+      card.addEventListener('click', function (e) {
+        // 子要素に a タグがある場合は無視
+        if (e.target.tagName.toLowerCase() === 'a' || e.target.tagName.toLowerCase() === 'button') return;
+
+        const ul = card.querySelector('ul.subordinates');
+        const btn = card.querySelector('.show-details');
+        ul.classList.toggle('hidden');
+        if (btn) {
+          btn.textContent = ul.classList.contains('hidden') ? '+ 詳細' : '− 閉じる';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

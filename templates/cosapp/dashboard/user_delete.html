@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_alt.html" %}
 {% load static %}
 
 {% block extra_head %}
@@ -17,8 +17,8 @@
 
     <!-- ボタン -->
     <div class="button-group">
-      <p><button type="submit" name="confirm_delete" class="delete-button">削除する</button></p>
-      <a href="{% url 'user_list' %}" class="cancel-button">キャンセル</a>
+      <button type="submit" name="confirm_delete" class="delete-button">削除する</button>
+      <a href="{% url 'dashboard_test' %}" class="cancel-button">キャンセル</a>
     </div>
   </form>
 </div>

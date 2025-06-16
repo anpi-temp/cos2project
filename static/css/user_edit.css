@@ -1,3 +1,7 @@
+body {
+    background-color: #cdedf5;
+}
+
 .user-form {
     max-width: 600px;
     margin: 30px auto;
@@ -61,7 +65,8 @@
 
 /* 全体のコンテンツスタイル */
 .main-content {
-    max-width: 800px;
+    max-width: 600px;
+    width: 100%;
     margin: 20px auto;
     padding: 20px;
 }
@@ -76,4 +81,11 @@
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 5px 0;
+        width: 90%;
+    }
 }

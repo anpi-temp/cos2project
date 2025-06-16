@@ -1,0 +1,122 @@
+body {
+    background-image: url("../images/main24.jpg");
+    background-size: contain;
+    background-color: rgba(255,255,255,0.2);
+    background-blend-mode: lighten;
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.dashboard-content {
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+}
+
+/* ===== タイトル部分 ===== */
+.image-with-text {
+    margin-bottom: 20px;
+}
+
+.image-text h2 {
+    font-size: 32px;
+    margin: 0;
+}
+
+.image-text p {
+    font-size: 18px;
+    margin: 4px 0;
+}
+
+/* ===== クイックアクションのボタン表示 ===== */
+.quick-actions {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+  
+  /* カードのスタイル */
+.action-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 260px;
+    text-decoration: none;
+    color: #333;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+  
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+  
+.card-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;  /* 高さを自動で維持 */
+    object-fit: contain;  /* 元画像を縮小表示・切り取りなし */
+    display: block;
+    background-color: #f9f9f9; /* 余白部分に色をつける場合は任意で */
+}
+  
+.card-body {
+    padding: 6px 12px 12px 12px;
+    text-align: center;
+    margin-bottom: 6px;
+}
+  
+.card-body h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+  
+.card-body p {
+    font-size: 12px;
+    color: #555;
+    margin: 0 0 5px 0;
+}
+
+.card-body i {
+    color: #4ad4d0;;
+}
+
+@media (max-width: 600px) {
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2列固定 */
+    gap: 12px;
+    justify-items: center; /* カードを中央寄せ */
+  }
+
+  .action-card {
+    width: 90%; /* または260pxのままでもよいが、柔軟性重視 */
+    max-width: 260px;
+  }
+
+  .image-text h2 {
+    font-size: 28px;
+  }
+
+  .image-text p {
+    font-size: 16px;
+  }
+
+  body {
+    background-size: cover; 
+  }
+}

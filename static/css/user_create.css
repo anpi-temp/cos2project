@@ -1,3 +1,7 @@
+body {
+    background-color: #cdedf5;
+}
+
 .user-form {
     max-width: 600px;
     margin: 20px auto;
@@ -10,7 +14,7 @@
 .user-form h2 {
     font-size: 24px;
     margin-bottom: 20px;
-    color: #333;
+    color: var(--primary-color);
     text-align: center;
 }
 
@@ -59,7 +63,31 @@
 
 /* 全体のコンテンツスタイル */
 .main-content {
-    max-width: 800px;
+    max-width: 600px;
+    width: 100%;
     margin: 20px auto;
     padding: 20px;
+}
+
+.dashboard-btn {
+    display: block;
+    width: fit-content;
+    margin: 50px auto 0 auto;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-btn:hover {
+    background-color: var(--hover-color);
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 5px 0;
+        width: 90%;
+    }
 }

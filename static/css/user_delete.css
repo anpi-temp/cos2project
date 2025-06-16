@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8fafc;
+    background-color: #cdedf5;
     margin: 0;
     padding: 0;
 }
@@ -9,6 +9,7 @@ body {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
+    background-color: white;
 }
   
 .title {
@@ -25,6 +26,7 @@ body {
 .button-group {
     display: flex;
     justify-content: space-between;
+    margin-top: 40px;
 }
   
 .delete-button,
@@ -34,6 +36,9 @@ body {
     text-align: center;
     cursor: pointer;
     font-size: 16px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
 }
   
 .delete-button {
@@ -48,8 +53,16 @@ body {
 .cancel-button {
     background-color: #3498db; /* キャンセルボタンの背景色 */
     color: white;
+    
 }
   
 .cancel-button:hover {
     background-color: #2980b9; /* ホバー時の色変更 */
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 5px 0;
+        width: 90%;
+    }
 }

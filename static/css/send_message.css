@@ -1,5 +1,9 @@
 body {
-    background-color: #b0ebf9;
+    background-color: #cdedf5;
+}
+
+.main-content {
+    padding-bottom: 20px;
 }
 
 /* 新しいスタイルの範囲 */
@@ -114,4 +118,35 @@ textarea {
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+}
+
+.user-list {
+    display: flex;
+    flex-wrap: wrap; /* 折り返し可能に */
+    gap: 12px; /* アイテム間のスペース */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: flex-start;
+}
+
+.user-item {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+    white-space: nowrap; /* 改行させない */
+    transition: background-color 0.2s;
+}
+
+.user-item:hover {
+    background-color: #f0f8ff;
+}
+
+@media (max-width: 600px) {
+    .form-container {
+        margin: 50px auto;
+    }
 }

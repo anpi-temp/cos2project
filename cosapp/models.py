@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from rest_framework import serializers
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     """

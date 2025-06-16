@@ -160,39 +160,39 @@ h3 {
 }
 
 @media (max-width: 480px) {
-    .main-header {
-        padding: 0 8px;
+    .image-text h1 {
+        color: rgb(217, 74, 74);
     }
-    .header-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
+
+    .image-text p {
+        color: rgb(192, 248, 255);
     }
-    .logo-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    .logo-icon {
-        width: 200px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-    .system-name {
-        font-size: 1rem;
-    }
-    .bcp-text {
-        font-size: 0.7rem;
-    }
-    .header-controls {
-        flex-direction: row;
-        justify-content: flex-end;
-        width: 100%;
+
+    .dashboard-content {
+        padding: 0 10px;
     }
 
     .action-card {
-        max-width: 200px;
         width: 100%;
+        max-width: 100%;
+        height: auto;
+        padding: 16px;
+        margin: 0 auto;
+    }
+
+    .action-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .action-card p {
+        font-size: 0.95rem;
+    }
+
+    .main-img6,
+    .main-img8 {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        padding: 20px 0 0 0;
     }
 }

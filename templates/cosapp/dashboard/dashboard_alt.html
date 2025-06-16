@@ -1,0 +1,44 @@
+{% extends "base_alt.html" %}
+{% load static %}
+
+{% block title %}ダッシュボード（簡易表示） - 安否確認{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dashboard_alt.css' %}">
+{% endblock %}
+
+{% block header_controls %}
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+  <div class="dashboard-content">
+    <div class="image-with-text">
+      <div class="image-text">
+        <h2>安否確認メニュー</h2>
+        <p>操作を選んでください</p>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+    <a href="{% url 'dashboard_test' %}" class="action-card">
+        <img src="{% static 'images/main22.png' %}" alt="利用者画像" class="card-img">
+        <div class="card-body">
+            <i class="fas fa-users"></i><h3>利用者一覧</h3>
+            <p>登録済み利用者の一覧を表示します</p><p>利用者情報を編集します</p><p>利用者アカウントの追加・削除をします</p>
+        </div>
+      </a>
+      
+      <a href="{% url 'send_admin_message' %}" class="action-card">
+        <img src="{% static 'images/main23.png' %}" alt="メッセージ画像" class="card-img">
+        <div class="card-body">
+            <i class="fas fa-envelope"></i><h3>メッセージ送信</h3>
+        </div>
+      </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- JSなし運用 -->
+{% endblock %}

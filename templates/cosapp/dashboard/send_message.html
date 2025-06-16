@@ -1,15 +1,22 @@
-{% extends 'base.html' %}
+{% extends 'base_alt2.html' %}
 {% load static %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/send_message.css' %}">
+    <style>
+        body {
+    background-image: url("{% static 'images/main29.jpg' %}");
+    background-size: cover;
+    background-color: rgba(255,255,255,0.2);
+  }
+    </style>
 {% endblock %}
 
 {% block content %}
 <main class="main-content">
     <div class="form-container">
         <div class="form-header">
-            <h2 class="form-title">メッセージ送信</h2>
+            <h2 class="form-title">メッセージ送信フォーマット</h2>
             <p class="form-description">管理メッセージを送信します</p>
         </div>
         <div class="form-body">
@@ -40,6 +47,21 @@
             </form>
         </div>
     </div>
-    <a href="{% url 'dashboard' %}" class="dashboard-btn">トップページに戻る</a>
+
+    <div class="user-list-section">
+        <h3 class="user-list-title">ユーザー一覧</h3>
+        <ul class="user-list">
+            {% for user in users %}
+                <li class="user-item">
+                    <span class="user-name">{{ user.username }}</span>
+                </li>
+            {% empty %}
+                <li class="user-item">登録されたユーザーがいません。</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'admin_message_history' %}" class="dashboard-btn">メッセージ履歴一覧に戻る</a>
+    <a href="{% url 'dashboard_alt2' %}" class="dashboard-btn">トップページに戻る</a>
 </main>
 {% endblock %}

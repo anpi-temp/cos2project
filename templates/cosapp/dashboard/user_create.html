@@ -1,8 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'base_alt.html' %}
 {% load static %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/user_create.css' %}">
+<style>
+  body {
+    background-image: url("{% static 'images/main28.jpg' %}");
+    background-size: cover;
+    background-color: rgba(255,255,255,0.2);
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -22,5 +29,8 @@
             <button type="submit" class="submit-btn">登録</button>
         </form>
     </div>
+
 </div>
+<a href="{% url 'dashboard_test2' %}" class="dashboard-btn">利用者一覧に戻る</a>
+<a href="{% url 'dashboard_alt2' %}" class="dashboard-btn">トップページに戻る</a>
 {% endblock %}
