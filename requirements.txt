@@ -101,3 +101,4 @@ jupyter-events
 jupyter-lsp
 jupyter_client
 jupyter_core
+scipy==1.10.1
