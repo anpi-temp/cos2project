@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: cosproject
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn your_project_name.wsgi:application
+    build:
+      pythonVersion: 3.12.3
