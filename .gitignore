@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# Django
+db.sqlite3
+*.sqlite3
+
+# 環境ファイル
+.env
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# バーチャル環境（念のため）
+venv/
+env/
+
+# 静的・メディアファイル（必要に応じて）
+staticfiles/
+media/
