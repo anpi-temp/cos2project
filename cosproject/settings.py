@@ -134,6 +134,10 @@ STATICFILES_DIRS = [
 # 出力先（Render が配信する場所）
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+import sys
+print("STATICFILES_DIRS:", STATICFILES_DIRS, file=sys.stderr)
+print("STATIC_ROOT:", STATIC_ROOT, file=sys.stderr)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
