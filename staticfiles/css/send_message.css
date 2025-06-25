@@ -1,0 +1,152 @@
+body {
+    background-color: #cdedf5;
+}
+
+.main-content {
+    padding-bottom: 20px;
+}
+
+/* 新しいスタイルの範囲 */
+.form-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+    max-width: 600px;
+    margin: 80px auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-title {
+    font-size: 1.75rem; /* 28px */
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.form-description {
+    color: var(--gray-text);
+    font-size: 1rem;
+}
+
+.form-body {
+    padding: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+input[type=text],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.375rem; /* 6px */
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type=text]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(26, 75, 140, 0.2);
+}
+
+textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.form-group.inline {
+    display: flex;
+    align-items: center;
+}
+
+.form-group.inline > * {
+    margin: 0; /* デフォルトのマージンをリセット */
+}
+
+.form-group.inline input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+    height: auto;
+    align-self: center;
+}
+
+.form-group.inline label {
+    margin-left: 0.2rem;
+    line-height: normal;
+}
+
+.submit-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: var(--hover-color);
+}
+
+.dashboard-btn {
+    display: block;
+    width: fit-content;
+    margin: 50px auto 0 auto;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.user-list {
+    display: flex;
+    flex-wrap: wrap; /* 折り返し可能に */
+    gap: 12px; /* アイテム間のスペース */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: flex-start;
+}
+
+.user-item {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+    white-space: nowrap; /* 改行させない */
+    transition: background-color 0.2s;
+}
+
+.user-item:hover {
+    background-color: #f0f8ff;
+}
+
+@media (max-width: 600px) {
+    .form-container {
+        margin: 50px auto;
+    }
+}

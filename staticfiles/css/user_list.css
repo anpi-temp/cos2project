@@ -1,0 +1,469 @@
+body {
+    background-color: honeydew;
+}
+
+.user-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* これで子要素が中央揃え */
+}
+
+.airplain2 {
+    width: 120px;
+    height: auto;
+    position: absolute;
+    top: 360px; /* 飛ばしたい高さに調整 */
+    left: calc(100vw - 120px); /* 画面右端の外から */
+    animation: zigzag-fly 15s linear forwards infinite;
+    z-index: -1;
+}
+
+@keyframes zigzag-fly {
+    0% {
+      left: calc(100vw - 140px);
+      top: 260px;
+    }
+    20% {
+      left: calc(80vw -80px);
+      top: 900px;
+    }
+    40% {
+      left: calc(60vw -80px);
+      top: 260px;
+    }
+    60% {
+      left: calc(40vw - 80px);
+      top: 900px;
+    }
+    80% {
+      left: calc(20vw - 80px);
+      top: 260px;
+    }
+    100% {
+      left: 0px;
+      top: 900px;
+    }
+  }
+
+/* 管理人ノードのスタイル */
+.admin-node {
+    display: flex;
+    justify-content: center; /* 子要素を中央に */
+    width: 100%;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.admin-node::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; /* 幹の長さ */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 40px;
+    background-color: #4a90e2;
+}
+
+
+.admin-node .admin-to-staff-connector { /* 管理者から中間管理者へのコネクタ */
+    position: absolute;
+    left: 50%; /* 管理者カードの中央 */
+    bottom: -20px; /* 管理者カードの下からの距離 */
+    width: 50px; /* コネクタの水平線の長さ */
+    height: 4px; /* 線の太さ */
+    background-color: #4a90e2; /* 色 */
+    transform: translateX(-50%); /* 中央揃え */
+}
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 最小150pxで自動調整 */
+    justify-content: flex-end; /* カードを右寄せにする */
+    align-items: center;
+    padding: 30px 0;
+    position: relative;
+    width: 50%; /* 必要に応じて幅を調整 */
+    margin-left: auto; /* 追加：右寄せにするために左マージンをautoに設定 */
+}
+
+.staff-grid::after {
+    content: '';
+    position: absolute;
+    top: -2px; /* 上部から枝を伸ばす */
+    width: 75.3%; /* 枝の長さ */
+    height: 4px; /* 枝の太さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+.staff-grid::before {
+    content: '';
+    position: absolute;                      /* 中央に配置 */
+    top: -2px;
+    transform: translateX(-50%);     /* 中央揃え補正 */
+    width: 4px;
+    height: 112px;
+    background-color: #4a90e2;
+    z-index: 2;
+}
+
+.staff-grid .user-branch {
+    text-align: center;
+    margin: 0 10px;
+}
+
+.staff-grid .user-card {
+    width: 210px; /* カードの幅 */
+    padding: 15px; /* カード内の余白 */
+    height: 40px; /* カードの高さ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #4a90e2; /* 枠線 */
+    background: #ee380b;
+}
+
+.staff-grid .user-card.empty-slot {
+    width: 210px; /* 中間管理者カードと同じ幅 */
+    height: 40px; /* 中間管理者カードと同じ高さ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #4a90e2; /* 枠線 */
+    background: #ee380b;
+}
+
+.staff-branch {
+    position: relative; /* 疑似要素を親要素内で絶対位置に配置するため */
+}
+
+.staff-branch::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 枝がカードの上部からどれだけ離れるか */
+    left: 50%; /* 枝をカードの中央に揃える */
+    transform: translateX(-50%); /* 中央揃えを補正 */
+    width: 4px; /* 枝の幅 */
+    height: 30px; /* 枝の長さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+.staff-branch.empty::before {
+    content: '';
+    position: absolute;
+    top: -30px; /* 空スロットの場合も同じ位置に枝を伸ばす */
+    left: 50%; /* 枝をカードの中央に揃える */
+    transform: translateX(-50%); /* 中央揃えを補正 */
+    width: 4px; /* 枝の幅 */
+    height: 30px; /* 枝の長さ */
+    background-color: #4a90e2; /* 枝の色 */
+}
+
+
+.user-list-line-wrapper {
+    position: relative;
+}
+  
+.airplain-on-line {
+    position: absolute;
+    top: 0;
+    left: 50%; /* 線の中央に配置 */
+    transform: translate(-50%, -60%); /* 画像の大きさに合わせて微調整 */
+    width: 80px; /* 画像サイズはお好みで */
+    height: auto;
+    z-index: 2;
+    pointer-events: none; /* クリックを透過させたい場合 */
+}
+
+.user-tree-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* ユーザー数に合わせて変更 */
+  grid-template-rows: 30px 60px auto;    /* 横線・紙飛行機・ユーザー */
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.user-branch {
+  margin-top: 10px;
+}
+
+
+/* ユーザーグリッド */
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 1行に最大5列 */
+    gap: 40px 80px; /* アイテム間のスペース */
+    padding-top: 30px;
+}
+
+/* ユーザーブランチ（各アイテム） */
+.user-branch {
+    position: relative;
+}
+
+/* 樹形図の縦線 */
+.user-branch::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;                       /* 中央に配置 */
+    transform: translateX(-50%);     /* 中央揃え補正 */
+    width: 4px;
+    height: 30px;
+    background-color: #4a90e2;
+    z-index: 2;
+}
+
+/* 樹形図の横線（最初の行） */
+.user-grid > *::after {
+    left: 50%;
+    content: '';
+    position: absolute;
+    top: -30px; /* 横線の位置 */
+    width: calc(100% + 79px); /* 横線の長さ */
+    height: 4px; /* 横線の高さ */
+    background-color: #4a90e2;
+}
+
+.user-grid > *:nth-child(5n)::after { /* 最後のアイテムには横線を描画しない */
+    display: none;
+}
+
+.user-grid > *:nth-child(n+6)::after { /* 最後のアイテムには横線を描画しない */
+    display: none;
+}
+  
+
+  
+  /* 2行目以降のユーザー枝 */
+.user-grid > *:nth-child(n+6) { /* 3番目以降の要素 */
+    position: relative;
+}
+  
+.user-grid > *:nth-child(n+6)::before {
+    content: '';
+    position: absolute;
+    top: -50px; /* 上のカードとの間隔 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 50px; /* 上のカードまで伸ばす */
+    background-color: #4a90e2;
+    z-index: 1;
+}
+
+
+.user-card {
+    background: #9df7e1;
+    border: 1px solid #e0e0e0;
+    border-radius: 37% / 50%;
+    padding: 15px 25px;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 140px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.user-card.empty-slot {
+    width: 140px;
+    height: 39px;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 3; /* ホバー時にカードをツリーの上に表示 */
+    position: relative;
+}
+
+.user-card.admin {
+    background: #ee380b;
+    border: 4px solid #4a90e2;
+    justify-content: center;
+    max-width: 240px;
+    width: 100%; 
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.phone {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: #4a90e2;
+    color: white;
+}
+
+.delete-btn {
+    background: #ff6b6b;
+    color: white;
+}
+
+.back-to-dashboard {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.dashboard-btn {
+    display: block;
+    width: fit-content;
+    margin: 50px auto 0 auto;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-btn:hover {
+    background-color: var(--hover-color);
+}
+
+.message-btn {
+    display: block;
+    margin: 70px auto 50px auto;
+    width: fit-content;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+  
+.message-btn:hover {
+    background-color: #357ab8;
+}
+
+@media (max-width: 768px) {
+    
+    .user-grid {
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      gap: 40px 34px; /* 上下にゆとり（横は不要） */
+    }
+
+    .user-grid {
+        position: relative;
+      }
+
+    .user-grid::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 70px;
+        height: 4px;
+        background-color: #4a90e2;
+        width: calc(100% - 140px)
+      }
+
+      .user-grid > *::after {
+        display: none !important;
+      }
+
+  
+    /* user-branch::before の縦線はそのまま活かすので修正不要 */
+
+    .user-branch::before {
+        top: -50px;
+        height: 50px;
+    }
+  
+    .staff-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        width: 320px;
+        margin: 0 auto;
+        position: relative;
+        align-items: start; /* 横線とカードの高さを揃えるため */
+        margin-bottom: 20px;
+      }
+
+      .staff-grid::after {
+        content: '';
+        position: absolute;
+        top: 60px; /* 線のY位置はこのままでOK */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 46px; /* 長さ調整。スタッフ間の距離に合わせて */
+        height: 4px;
+        background-color: #4a90e2;
+        z-index: 0;
+      }
+      
+      .staff-grid .user-card.empty-slot {
+        width: 140px;
+        height: 70px;
+        padding: 0 20px;
+        font-size: 16px;
+      }
+      
+      .staff-grid::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 180px;
+        background-color: #4a90e2;
+      }
+
+      .staff-branch::before {
+        content: none;
+      }
+      
+    
+      /* 空スロット対応 */
+      .staff-branch.empty::before {
+        background-color: #4a90e2;
+      }
+
+          /* ボタンだけ幅調整（任意） */
+    .dashboard-btn,
+    .message-btn {
+      width: 50%;
+      text-align: center;
+      font-size: 1rem;
+    }
+    
+}
+
+
+  
+  
+
+  
