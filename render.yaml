@@ -8,3 +8,7 @@ services:
     build:
       pythonVersion: 3.12.3
     staticPublishPath: staticfiles
+
+static:
+  - path: staticfiles
+    urlPrefix: /static/
