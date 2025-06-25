@@ -8,3 +8,4 @@ services:
     startCommand: gunicorn cosproject.wsgi:application
     build:
       pythonVersion: 3.12.3
+    staticPublishPath: staticfiles
