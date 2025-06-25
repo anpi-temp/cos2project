@@ -189,8 +189,6 @@ SESSION_COOKIE_SECURE = False
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
-INSTALLED_APPS += ['pwa']
-
 PWA_APP_NAME = '安否確認システム'
 PWA_APP_DESCRIPTION = "災害時などにおける安否確認"
 PWA_APP_THEME_COLOR = '#000000'
