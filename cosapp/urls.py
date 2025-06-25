@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.shortcuts import redirect
 from rest_framework.routers import DefaultRouter
 from .views import (DashboardView, UserListView, UserCreateView, AdminSetupView, AdminLoginView,
                     UserDeleteView, UserUpdateView, SendAdminMessageView, UserMessageListView, CustomLogoutView,
@@ -12,6 +13,7 @@ router = DefaultRouter()
 router.register(r'admin-messages', AdminMessageViewSet, basename='admin-message')
 
 urlpatterns = [
+    path('', lambda request: redirect('user_login'), name='root_redirect'),
     path('set_up/', AdminSetupView.as_view(), name='admin_setup'),
     path('login/', AdminLoginView.as_view(), name='admin_login'),
     path('logout/', CustomLogoutView.as_view(), name='admin_logout'),
