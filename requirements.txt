@@ -23,7 +23,7 @@ constantly
 contourpy
 cookiecutter
 coreapi==2.3.3
-coreschema==0.0.4
+coreschema
 cryptography
 cssselect
 cycler
