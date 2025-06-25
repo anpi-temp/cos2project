@@ -100,4 +100,3 @@ jupyter-events
 jupyter-lsp
 jupyter_client
 jupyter_core
-scipy==1.12.0 --only-binary=:all:
