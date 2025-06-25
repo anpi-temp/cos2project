@@ -21,5 +21,4 @@ venv/
 env/
 
 # 静的・メディアファイル（必要に応じて）
-staticfiles/
 media/
