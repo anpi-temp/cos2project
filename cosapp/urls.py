@@ -39,3 +39,7 @@ urlpatterns = [
     path('user-login/', SimpleLoginView.as_view(), name='user_login'),
     path('api/', include(router.urls)),
 ]
+
+urlpatterns += [
+    path('', include('pwa.urls')),
+]
