@@ -134,10 +134,6 @@ STATICFILES_DIRS = [
 # 出力先（Render が配信する場所）
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-import sys
-print("STATICFILES_DIRS:", STATICFILES_DIRS, file=sys.stderr)
-print("STATIC_ROOT:", STATIC_ROOT, file=sys.stderr)
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -188,13 +184,3 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = False
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
-
-STATIC_URL = '/static/'
-
-# 開発環境用の静的ファイルディレクトリ
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # プロジェクト直下の 'static' フォルダ
-]
-
-# 本番環境で静的ファイルを一箇所にまとめるための設定
-STATIC_ROOT = BASE_DIR / 'staticfiles'
