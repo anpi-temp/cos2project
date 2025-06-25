@@ -11,4 +11,4 @@ services:
     staticPublishPath: staticfiles
 static:
   - path: staticfiles
-    urlPrefix: /static
+    urlPrefix: /static/
