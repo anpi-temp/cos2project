@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}安否確認システム{% endblock %}</title>
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'images/favicon3.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/base_alt.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     {% block extra_head %}{% endblock %}
@@ -32,12 +32,12 @@
         </a>
         <ul class="dropdown-menu submenu-panel">
             <li><a href="{% url 'dashboard_test' %}">利用者一覧表示</a></li>
-            <li><a href="{% url 'user_create' %}">利用者新規登録</a></li>
+            <li><a href="{% url 'user_create3' %}">利用者新規登録</a></li>
         </ul>
         </li>
 
         <li class="nav-item">
-        <a href="{% url 'send_admin_message' %}" class="nav-btn">
+        <a href="{% url 'send_admin_message3' %}" class="nav-btn">
             <i class="fas fa-paper-plane"></i><span>メッセージ送信</span>
         </a>
         </li>

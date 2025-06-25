@@ -41,9 +41,9 @@
         <ul class="subordinates hidden">
             {% for user in slot %}
             {% if user %}
-                <li><a href="{% url 'user_edit' user.id %}">{{ user.username }}</a></li>
+                <li><a href="{% url 'user_edit3' user.id %}">{{ user.username }}</a></li>
             {% else %}
-                <li class="empty"><a href="{% url 'user_create' %}">空き</a></li>
+                <li class="empty"><a href="{% url 'user_create3' %}">空き</a></li>
             {% endif %}
             {% endfor %}
         </ul>
@@ -53,7 +53,7 @@
 </div>
 
 <div class="bottom-links">
-  <a href="{% url 'send_admin_message' %}" class="message-btn">メッセージ送信</a>
+  <a href="{% url 'send_admin_message3' %}" class="message-btn">メッセージ送信</a>
   <a href="{% url 'dashboard_alt' %}" class="dashboard-btn">トップページに戻る</a>
 </div>
 {% endblock %}

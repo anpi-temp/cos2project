@@ -54,3 +54,6 @@ class AdminRegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class SimpleLoginForm(forms.Form):
+    username = forms.CharField(label="お名前")

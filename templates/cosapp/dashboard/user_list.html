@@ -53,7 +53,7 @@
       {% if slot %}
         <!-- 登録済みユーザー表示 -->
         <div class="user-branch">
-          <a href="{% url 'user_edit' slot.id %}" class="user-card">
+          <a href="{% url 'user_edit2' slot.id %}" class="user-card">
             <div class="user-info">
               <span class="username">{{ slot.username }}</span>
               <span class="phone">{{ slot.phone_number }}</span>
@@ -63,7 +63,7 @@
       {% else %}
         <!-- 空スロット表示 -->
         <div class="user-branch empty">
-          <a href="{% url 'user_create' %}" class="user-card empty-slot">
+          <a href="{% url 'user_create2' %}" class="user-card empty-slot">
           </a>
         </div>
       {% endif %}
@@ -71,7 +71,7 @@
   </div>
 </div>
 
-<a href="{% url 'send_admin_message' %}" class="message-btn">メッセージ送信</a>
+<a href="{% url 'send_admin_message2' %}" class="message-btn">メッセージ送信</a>
 
 <a href="{% url 'dashboard' %}" class="dashboard-btn">トップページに戻る</a>
 {% endblock %}

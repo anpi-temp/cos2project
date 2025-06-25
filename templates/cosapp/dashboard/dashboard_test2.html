@@ -5,63 +5,64 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/test.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 <style>
   body {
     background-image: url("{% static 'images/main28.jpg' %}");
     background-size: cover;
     background-color: rgba(255,255,255,0.2);
   }
+
   .carousel-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-}
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
 
-.carousel-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;
-  padding: 0 12px;
-  box-sizing: border-box;
-  gap: 15px;
-}
+  .carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    gap: 15px;
+  }
 
-.arrow-btn {
-  flex: 0 0 40px;
-  height: 40px;
-  background: #4ad4d0;
-  border: none;
-  color: white;
-  font-size: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+  .arrow-btn {
+    flex: 0 0 40px;
+    height: 40px;
+    background: #4ad4d0;
+    border: none;
+    color: white;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
 
-.carousel-card-container {
-  flex: 1;
-  overflow: hidden;
-  max-width: 100%;
-}
+  .carousel-card-container {
+    flex: 1;
+    overflow: hidden;
+    max-width: 100%;
+  }
 
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-  gap: 10px;
-}
+  .carousel-track.swiper-wrapper {
+    display: flex;
+    align-items: center;
+  }
 
-.carousel-slide {
-  flex: 0 0 100%;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-sizing: border-box;
-  text-align: center;
-}
-
+  .carousel-slide.swiper-slide {
+    width: 280px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    width: 100%;
+  }
 
   .carousel-indicator {
     font-size: 14px;
@@ -71,18 +72,12 @@
 
   @media (max-width: 480px) {
     .carousel-slide {
-    padding: 20px 12px; /* ← 内側に余白を持たせて「縮んでる」印象 */
-  }
-
-  .carousel-controls {
-    gap: 10px;
-  }
-    .arrow-btn {
-      width: 36px;
+      width: 240px;
+      padding: 16px;
     }
 
-    .carousel-card-container {
-      max-width: 100%;
+    .arrow-btn {
+      width: 36px;
     }
   }
 </style>
@@ -117,8 +112,8 @@
   <div class="carousel-wrapper">
     <div class="carousel-controls">
       <button class="arrow-btn" onclick="prevGroup()">◀</button>
-      <div class="carousel-card-container">
-        <div id="carousel-track" class="carousel-track"></div>
+      <div class="carousel-card-container swiper">
+        <div id="carousel-track" class="carousel-track swiper-wrapper"></div>
       </div>
       <button class="arrow-btn" onclick="nextGroup()">▶</button>
     </div>
@@ -137,6 +132,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script>
   let currentIndex = 0;
   let userGroups = [];
@@ -145,13 +141,11 @@
     try {
       userGroups = JSON.parse(document.getElementById('userGroupsJSON').textContent);
       generateSlides();
-      updateCarousel();
+      initSwiper();
     } catch (error) {
       console.error("❌ JSONパースエラー:", error);
     }
   });
-
-  window.addEventListener("resize", updateCarousel);
 
   function generateSlides() {
     const track = document.getElementById('carousel-track');
@@ -159,7 +153,7 @@
 
     userGroups.forEach((group, index) => {
       const slide = document.createElement('div');
-      slide.classList.add('carousel-slide');
+      slide.classList.add('carousel-slide', 'swiper-slide');
 
       let html = `<div class='staff-name'>利用者グループ${index + 1}</div><ul class='subordinates'>`;
       for (const user of group) {
@@ -175,26 +169,27 @@
     });
   }
 
-  function updateCarousel() {
-    const track = document.getElementById('carousel-track');
-    const indicator = document.getElementById('carousel-indicator');
-    const slide = document.querySelector('.carousel-slide');
-    if (!slide) return;
-
-    const slideWidth = slide.offsetWidth + 10; // ← マージン不要、padding込み幅でOK
-    const offset = -slideWidth * currentIndex;
-    track.style.transform = `translateX(${offset}px)`;
-    indicator.textContent = `${currentIndex + 1} / ${userGroups.length}`;
+  function initSwiper() {
+    const swiper = new Swiper(".swiper", {
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      spaceBetween: 20,
+      on: {
+        slideChange: function (swiper) {
+          const indicator = document.getElementById("carousel-indicator");
+          indicator.textContent = `${swiper.realIndex + 1} / ${userGroups.length}`;
+          currentIndex = swiper.realIndex;
+        },
+      },
+    });
   }
 
   function prevGroup() {
-    currentIndex = (currentIndex - 1 + userGroups.length) % userGroups.length;
-    updateCarousel();
+    document.querySelector(".swiper").swiper.slidePrev();
   }
 
   function nextGroup() {
-    currentIndex = (currentIndex + 1) % userGroups.length;
-    updateCarousel();
+    document.querySelector(".swiper").swiper.slideNext();
   }
 </script>
 {% endblock %}

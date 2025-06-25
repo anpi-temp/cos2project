@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, FormView, TemplateView
 from django.views import View
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, AdminMessageForm
@@ -17,17 +17,17 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
+from .forms import SimpleLoginForm
 
 CustomUser = get_user_model()
-
-class AdminView(LoginRequiredMixin, View):
+    
+class DashboardView(LoginRequiredMixin, View):
     login_url = 'admin_login'
-    template_name = 'cosapp/dashboard/dashboard.html'
 
     def get(self, request):
         if not request.user.is_admin:  # 管理者フラグでチェック
             return redirect('admin_login')
-        return render(request, self.template_name)
+        return render(request, 'cosapp/dashboard/dashboard.html')
     
 def dashboard_alt(request):
     return render(request, 'cosapp/dashboard/dashboard_alt.html')
@@ -148,6 +148,18 @@ class UserCreateView(CreateView):
     template_name = 'cosapp/dashboard/user_create.html'
     success_url = reverse_lazy('user_list')
 
+class NewUserCreateView(CreateView):
+    model = CustomUser
+    form_class = CustomUserCreationForm
+    template_name = 'cosapp/dashboard/user_create2.html'
+    success_url = reverse_lazy('user_list')
+
+class NewUserCreateView2(CreateView):
+    model = CustomUser
+    form_class = CustomUserCreationForm
+    template_name = 'cosapp/dashboard/user_create3.html'
+    success_url = reverse_lazy('user_list')
+
 class UserDeleteView(DeleteView):
     model = CustomUser
     template_name = 'cosapp/dashboard/user_delete.html'
@@ -157,6 +169,18 @@ class UserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
     template_name = 'cosapp/dashboard/user_edit.html'
+    success_url = reverse_lazy('user_list')
+
+class NewUserUpdateView(UpdateView):
+    model = CustomUser
+    form_class = CustomUserUpdateForm
+    template_name = 'cosapp/dashboard/user_edit2.html'
+    success_url = reverse_lazy('user_list')
+
+class NewUserUpdateView2(UpdateView):
+    model = CustomUser
+    form_class = CustomUserUpdateForm
+    template_name = 'cosapp/dashboard/user_edit3.html'
     success_url = reverse_lazy('user_list')
 
 class SendAdminMessageView(LoginRequiredMixin, FormView):
@@ -205,6 +229,96 @@ class SendAdminMessageView(LoginRequiredMixin, FormView):
         return context
 
 
+class NewSendAdminMessageView(LoginRequiredMixin, FormView):
+    login_url = 'admin_login'
+    template_name = 'cosapp/dashboard/send_message2.html'
+    form_class = AdminMessageForm
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        content = form.cleaned_data['content']
+        send_to_all = form.cleaned_data['send_to_all_users']
+        recipient = form.cleaned_data.get('recipient')
+
+        if send_to_all:
+            # 全ユーザーに送信
+            for user in CustomUser.objects.filter(is_admin=False):
+                AdminMessage.objects.create(
+                    recipient=user,
+                    subject=subject,
+                    content=content
+                )
+            messages.success(self.request, '全ユーザーにメッセージを送信しました。')
+        elif recipient:
+            # 単一ユーザーに送信
+            AdminMessage.objects.create(
+                recipient=recipient,
+                subject=subject,
+                content=content
+            )
+            messages.success(self.request, 'メッセージを送信しました。')
+        else:
+            messages.error(self.request, '受信者を選択してください。')
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # フォームが無効な場合のエラーメッセージを追加
+        messages.error(self.request, 'フォームにエラーがあります。修正してください。')
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = CustomUser.objects.filter(is_admin=False)
+        return context
+    
+class NewSendAdminMessageView2(LoginRequiredMixin, FormView):
+    login_url = 'admin_login'
+    template_name = 'cosapp/dashboard/send_message3.html'
+    form_class = AdminMessageForm
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        content = form.cleaned_data['content']
+        send_to_all = form.cleaned_data['send_to_all_users']
+        recipient = form.cleaned_data.get('recipient')
+
+        if send_to_all:
+            # 全ユーザーに送信
+            for user in CustomUser.objects.filter(is_admin=False):
+                AdminMessage.objects.create(
+                    recipient=user,
+                    subject=subject,
+                    content=content
+                )
+            messages.success(self.request, '全ユーザーにメッセージを送信しました。')
+        elif recipient:
+            # 単一ユーザーに送信
+            AdminMessage.objects.create(
+                recipient=recipient,
+                subject=subject,
+                content=content
+            )
+            messages.success(self.request, 'メッセージを送信しました。')
+        else:
+            messages.error(self.request, '受信者を選択してください。')
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # フォームが無効な場合のエラーメッセージを追加
+        messages.error(self.request, 'フォームにエラーがあります。修正してください。')
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = CustomUser.objects.filter(is_admin=False)
+        return context
+
 class UserMessageListView(ListView):
     model = AdminMessage
     template_name = 'cosapp/user/message_list.html'
@@ -251,13 +365,7 @@ class ReadMessageListView(View):
         }
         return render(request, self.template_name, context)
 
-class DashboardView(LoginRequiredMixin, View):
-    login_url = 'admin_login'
 
-    def get(self, request):
-        if not request.user.is_admin:  # 管理者フラグでチェック
-            return redirect('admin_login')
-        return render(request, 'cosapp/dashboard/dashboard.html')
 
 class AdminSetupView(View):
     def get(self, request):
@@ -335,4 +443,23 @@ class AdminMessageHistoryView(LoginRequiredMixin, UserPassesTestMixin, ListView)
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_admin
+    
+class SimpleLoginView(FormView):
+    template_name = 'cosapp/dashboard/simple_login.html'
+    form_class = SimpleLoginForm
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        User = get_user_model()
+        try:
+            self.user = User.objects.get(username=username)
+            login(self.request, self.user)
+            return super().form_valid(form)
+        except User.DoesNotExist:
+            form.add_error('username', 'ユーザーが見つかりません')
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('message_list', args=[self.user.id])
+
     

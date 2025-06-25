@@ -1,0 +1,66 @@
+{% extends 'base_alt.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/send_message.css' %}">
+    <style>
+        body {
+    background-image: url("{% static 'images/main29.jpg' %}");
+    background-size: cover;
+    background-color: rgba(255,255,255,0.2);
+  }
+    </style>
+{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">メッセージ送信フォーマット</h2>
+            <p class="form-description">管理メッセージを送信します</p>
+        </div>
+        <div class="form-body">
+            <form method="post" class="message-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.recipient.id_for_label }}" class="form-label">受信者</label>
+                    {{ form.recipient }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">タイトル</label>
+                    {{ form.subject }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.content.id_for_label }}" class="form-label">メッセージ内容</label>
+                    {{ form.content }}
+                </div>
+
+                <div class="form-group inline">
+                    {{ form.send_to_all_users }}
+                    <label for="{{ form.send_to_all_users.id_for_label }}" class="form-label">全ユーザーに送信</label>
+                </div>
+                
+                <button type="submit" class="submit-button">送信</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="user-list-section">
+        <h3 class="user-list-title">ユーザー一覧</h3>
+        <ul class="user-list">
+            {% for user in users %}
+                <li class="user-item">
+                    <span class="user-name">{{ user.username }}</span>
+                </li>
+            {% empty %}
+                <li class="user-item">登録されたユーザーがいません。</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'dashboard_alt' %}" class="dashboard-btn">トップページに戻る</a>
+</main>
+{% endblock %}

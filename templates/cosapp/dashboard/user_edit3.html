@@ -1,0 +1,36 @@
+{% extends 'base_alt.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/user_edit.css' %}">
+    <style>
+  body {
+    background-image: url("{% static 'images/main28.jpg' %}");
+    background-size: cover;
+    background-color: rgba(255,255,255,0.2);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="user-form">
+        <h2>利用者情報編集</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">利用者名:</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone_number.id_for_label }}">電話番号:</label>
+                {{ form.phone_number }}
+            </div>
+            <button type="submit" class="submit-btn">更新</button>
+            <div class="delete-account">
+                <a href="{% url 'user_delete' object.id %}" class="btn btn-danger">アカウントを削除</a>
+            </div>
+        </form>
+    </div>
+    <a href="{% url 'dashboard_test' %}" class="dashboard-btn">利用者一覧に戻る</a>
+    <a href="{% url 'dashboard_alt' %}" class="dashboard-btn">トップページに戻る</a>
+{% endblock %}
