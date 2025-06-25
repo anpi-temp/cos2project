@@ -24,7 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-c!4a=vfloa!1zt3f+7#6oe$j2*px-or6*mtu9cyd(49g0@z**p"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+if not DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 ALLOWED_HOSTS = ['cos2project.onrender.com']
 
