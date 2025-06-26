@@ -5,35 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}安否確認システム{% endblock %}</title>
+
+    <!-- アイコン・スタイル -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="{% static 'manifest/manifest.json' %}">
+    <link rel="icon" href="{% static 'images/icon-192.png' %}" sizes="192x192">
+    <meta name="theme-color" content="#000000">
+
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
     <div class="container">
         <header class="main-header">
-            <!-- Flexboxでロゴとコントロールを分ける -->
             <div class="header-content">
-            <div class="logo-container">
-                <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
-                <div class="logo-text">
-                    <span class="bcp-text">BCP</span>
-                    <h1 class="system-name">安否確認システム</h1>
+                <div class="logo-container">
+                    <img src="{% static 'images/logo.jpg' %}" alt="会社ロゴ" class="logo-icon">
+                    <div class="logo-text">
+                        <span class="bcp-text">BCP</span>
+                        <h1 class="system-name">安否確認システム</h1>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="header-space"></div>
         </header>
 
         <main class="main-content">
             {% block header %}{% endblock %}
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         </main>
     </div>
 
+    <!-- JavaScript -->
     <script src="{% static 'js/base.js' %}"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("{% static 'js/serviceworker.js' %}")
+          .then(reg => console.log("Service Worker 登録成功:", reg))
+          .catch(err => console.error("Service Worker 登録失敗:", err));
+      }
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

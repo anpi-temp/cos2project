@@ -27,6 +27,8 @@ SECRET_KEY = "django-insecure-c!4a=vfloa!1zt3f+7#6oe$j2*px-or6*mtu9cyd(49g0@z**p
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 ALLOWED_HOSTS = ['cos2project.onrender.com']
@@ -136,8 +138,6 @@ STATICFILES_DIRS = [
 # 出力先（Render が配信する場所）
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -200,17 +200,17 @@ PWA_APP_START_URL = '/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
     {
-        'src': '/static/img/icon-192.png',
+        'src': '/static/images/icon-192.png',
         'sizes': '192x192'
     },
     {
-        'src': '/static/img/icon-512.png',
+        'src': '/static/images/icon-512.png',
         'sizes': '512x512'
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        "src": "/static/img/icon-192.png",
+        "src": "/static/images/icon-192.png",
         "sizes": "192x192"
     }
 ]
