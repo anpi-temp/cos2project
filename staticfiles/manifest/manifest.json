@@ -2,7 +2,7 @@
   "name": "安否確認システム",
   "short_name": "安否確認",
   "description": "災害時などにおける安否確認",
-  "start_url": "/",
+  "start_url": "/user-login/",
   "display": "standalone",
   "scope": "/",
   "orientation": "portrait",
