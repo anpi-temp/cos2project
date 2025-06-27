@@ -194,7 +194,6 @@ html, body {
 
 /* ===== フッター ===== */
 .main-footer {
-    height: 60px;
     background-color: white;
     color: #000000;
     text-align: center;
@@ -209,10 +208,6 @@ html, body {
 .footer-phone,
 .footer-copyright {
     margin: 2px 0;
-}
-
-.qr-code {
-  width: 100px;
 }
 
 /* ======= スマホ対応（600px以下）======= */
