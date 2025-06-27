@@ -211,6 +211,10 @@ html, body {
     margin: 2px 0;
 }
 
+.qr-code {
+  width: 100px;
+}
+
 /* ======= スマホ対応（600px以下）======= */
 @media (max-width: 600px) {
     .menu-wrapper {

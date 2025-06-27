@@ -95,6 +95,10 @@ body {
     color: #4ad4d0;;
 }
 
+.qr-code {
+  width: 100px;
+}
+
 @media (max-width: 600px) {
   .quick-actions {
     display: grid;

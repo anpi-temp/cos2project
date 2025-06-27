@@ -360,6 +360,10 @@ html, body {
     transition: max-height 0.3s ease;
 }
 
+.qr-code {
+  width: 100px;
+}
+
 
 @media (min-width: 601px) {
   .nav-item.dropdown:hover .dropdown-menu {
