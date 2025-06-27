@@ -18,6 +18,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
 from .forms import SimpleLoginForm
+from django.http import FileResponse
+from django.views.decorators.http import require_GET
+import os
 
 CustomUser = get_user_model()
     
@@ -462,4 +465,14 @@ class SimpleLoginView(FormView):
     def get_success_url(self):
         return reverse('message_list', args=[self.user.id])
 
-    
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+@require_GET
+def manifest(request):
+    path = os.path.join(BASE_DIR, 'manifest.json')
+    return FileResponse(open(path, 'rb'), content_type='application/manifest+json')
+
+@require_GET
+def serviceworker(request):
+    path = os.path.join(BASE_DIR, 'serviceworker.js')
+    return FileResponse(open(path, 'rb'), content_type='application/javascript')

@@ -10,6 +10,7 @@ from .views import (DashboardView, UserListView, UserCreateView, AdminSetupView,
 
 from . import views
 from django.views.static import serve as static_serve
+from .views import manifest, serviceworker
 
 router = DefaultRouter()
 router.register(r'admin-messages', AdminMessageViewSet, basename='admin-message')
@@ -40,17 +41,10 @@ urlpatterns = [
     path('read_message_list/<int:user_id>/', ReadMessageListView.as_view(), name='read_message_list'),
     path('user-login/', SimpleLoginView.as_view(), name='user_login'),
     path('api/', include(router.urls)),
+    path('manifest.json', manifest),
+    path('serviceworker.js', serviceworker),
 ]
 
 urlpatterns += [
     path('', include('pwa.urls')),
-
-    path('manifest.json', static_serve, {
-        'path': 'manifest/manifest.json',
-        'document_root': settings.STATIC_ROOT
-    }),
-    path('serviceworker.js', static_serve, {
-        'path': 'js/serviceworker.js',
-        'document_root': settings.STATIC_ROOT
-    }),
 ]

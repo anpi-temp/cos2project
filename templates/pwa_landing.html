@@ -11,25 +11,25 @@
   <link rel="icon" href="{% static 'images/icon-192.png' %}" type="image/png">
   <meta name="theme-color" content="#000000">
 
+  <!-- Service Worker登録＋リダイレクト処理 -->
   <script>
+    function redirectToLogin() {
+      window.location.href = "/user-login/";
+    }
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/serviceworker.js', { scope: '/' })
         .then(function(registration) {
           console.log('Service Worker 登録成功:', registration);
-
-          // Service Worker登録完了後にリダイレクト
-          setTimeout(() => {
-            window.location.href = "/user-login/";
-          }, 500);
+          setTimeout(redirectToLogin, 500);
         })
         .catch(function(error) {
-          console.log('Service Worker 登録失敗:', error);
-          // 登録失敗しても遷移はする
-          window.location.href = "/user-login/";
+          console.warn('Service Worker 登録失敗:', error);
+          redirectToLogin();
         });
     } else {
-      // Service Worker 非対応環境でも遷移
-      window.location.href = "/user-login/";
+      // 古いブラウザなどService Worker未対応
+      redirectToLogin();
     }
   </script>
 </head>
