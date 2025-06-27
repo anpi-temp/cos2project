@@ -392,23 +392,36 @@ class AdminSetupView(View):
 
 class AdminLoginView(View):
     def get(self, request):
-        if not CustomUser.objects.filter(is_admin=True).exists():  # 管理者がいない場合セットアップへリダイレクト
+        if not CustomUser.objects.filter(is_admin=True).exists():
             return redirect('admin_setup')
-        if request.user.is_authenticated and request.user.is_admin:  # 認証済みかつ管理者の場合ダッシュボードへリダイレクト
+        if request.user.is_authenticated and request.user.is_admin:
             return redirect('dashboard')
-        return render(request, 'cosapp/dashboard/admin_login.html')
-    
+
+        # next パラメータをテンプレートに渡す（テンプレートで hidden input に使うため）
+        return render(request, 'cosapp/dashboard/admin_login.html', {
+            'next': request.GET.get('next', '')
+        })
+
     def post(self, request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        
-        if user is not None and user.is_admin:  # 管理者フラグでチェック
+
+        if user is not None and user.is_admin:
             login(request, user)
-            return redirect('dashboard_alt')
+            
+            # ↓ ここを next 優先に変更する
+            next_url = request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect('dashboard')  # デフォルトは dashboard に戻す
         else:
             messages.error(request, '無効な資格情報です。')
-            return render(request, 'cosapp/dashboard/admin_login.html')
+            return render(request, 'cosapp/dashboard/admin_login.html', {
+                'next': request.POST.get('next', '')
+            })
+
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
