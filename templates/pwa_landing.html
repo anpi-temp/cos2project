@@ -7,29 +7,30 @@
   <title>安否確認システム</title>
 
   <!-- PWA関連 -->
-  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="{% static 'images/icon-192.png' %}" type="image/png">
   <meta name="theme-color" content="#000000">
 
-  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register("{% static 'js/serviceworker.js' %}")
+      navigator.serviceWorker.register('/serviceworker.js', { scope: '/' })
         .then(function(registration) {
           console.log('Service Worker 登録成功:', registration);
+
+          // Service Worker登録完了後にリダイレクト
+          setTimeout(() => {
+            window.location.href = "/user-login/";
+          }, 500);
         })
         .catch(function(error) {
           console.log('Service Worker 登録失敗:', error);
+          // 登録失敗しても遷移はする
+          window.location.href = "/user-login/";
         });
-    }
-  </script>
-
-  <!-- リダイレクト -->
-  <script>
-    // 少し遅らせてリダイレクト（PWAファイル読込の猶予）
-    setTimeout(() => {
+    } else {
+      // Service Worker 非対応環境でも遷移
       window.location.href = "/user-login/";
-    }, 1000);
+    }
   </script>
 </head>
 <body>

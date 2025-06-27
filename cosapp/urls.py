@@ -1,5 +1,6 @@
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf import settings
 from rest_framework.routers import DefaultRouter
 from .views import (DashboardView, UserListView, UserCreateView, AdminSetupView, AdminLoginView,
                     UserDeleteView, UserUpdateView, SendAdminMessageView, UserMessageListView, CustomLogoutView,
@@ -8,6 +9,7 @@ from .views import (DashboardView, UserListView, UserCreateView, AdminSetupView,
                     NewSendAdminMessageView2, SimpleLoginView, TemplateView)
 
 from . import views
+from django.views.static import serve as static_serve
 
 router = DefaultRouter()
 router.register(r'admin-messages', AdminMessageViewSet, basename='admin-message')
@@ -42,4 +44,13 @@ urlpatterns = [
 
 urlpatterns += [
     path('', include('pwa.urls')),
+
+    path('manifest.json', static_serve, {
+        'path': 'manifest/manifest.json',
+        'document_root': settings.STATIC_ROOT
+    }),
+    path('serviceworker.js', static_serve, {
+        'path': 'js/serviceworker.js',
+        'document_root': settings.STATIC_ROOT
+    }),
 ]
